@@ -39,6 +39,9 @@ resource "azurerm_kubernetes_cluster" "Terra-AKS-Stan1" {
   }
 
 addon_profile {
+    http_application_routing{
+      enabled                    = true
+    }
     oms_agent {
       enabled                    = true
       log_analytics_workspace_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.id}"
