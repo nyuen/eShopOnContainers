@@ -8,6 +8,14 @@
 *.sln.docstates
 .vscode/
 
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
