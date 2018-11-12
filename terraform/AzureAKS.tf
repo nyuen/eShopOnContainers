@@ -11,10 +11,10 @@
 
 # Cluster AKS
 # AKS Cluster
-resource "azurerm_kubernetes_cluster" "Terra-AKS-Stan1" {
+resource "azurerm_kubernetes_cluster" "Terra-AKS-SpecialK" {
   name                   = "${var.AKS-Name}"
   location               = "${var.AzureRegion}"
-  resource_group_name    = "${azurerm_resource_group.Terra-RG-Stan1.name}"
+  resource_group_name    = "${azurerm_resource_group.Terra-RG-SpecialK.name}"
   kubernetes_version     = "${var.KubernetesVersion}"
   dns_prefix             = "${var.DNSPrefix}"
   
@@ -44,7 +44,7 @@ addon_profile {
     }
     oms_agent {
       enabled                    = true
-      log_analytics_workspace_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.id}"
+      log_analytics_workspace_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
     }
   }
 
@@ -56,25 +56,25 @@ addon_profile {
 
 # Output AKS
 output "id" {
-    value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.id}"
+    value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.id}"
 }
 
 # output "kube_config" {
-#   value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.kube_config_raw}"
+#   value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.kube_config_raw}"
 # }
 
 # output "client_key" {
-#   value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.kube_config.0.client_key}"
+#   value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.kube_config.0.client_key}"
 # }
 
 # output "client_certificate" {
-#   value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.kube_config.0.client_certificate}"
+#   value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.kube_config.0.client_certificate}"
 # }
 
 # output "cluster_ca_certificate" {
-#   value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.kube_config.0.cluster_ca_certificate}"
+#   value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.kube_config.0.cluster_ca_certificate}"
 # }
 
 output "host" {
-  value = "${azurerm_kubernetes_cluster.Terra-AKS-Stan1.kube_config.0.host}"
+  value = "${azurerm_kubernetes_cluster.Terra-AKS-SpecialK.kube_config.0.host}"
 }

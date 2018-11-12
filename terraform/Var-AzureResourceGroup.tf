@@ -8,7 +8,7 @@ variable "AzureRegion" {
 
 # Variable pour definir le nom du groupe de ressource ou deployer la plateforme
 # Variable Resource Group Name
-variable "RessourceGroup" {
+variable "ResourceGroup" {
   type    = "string"
-  #default = ""
+  default = "SpecialK-RG"
 }

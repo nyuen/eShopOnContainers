@@ -50,7 +50,7 @@ variable "AdminName" {
 # By Default : Standard_D1_v2
 variable "AKSNodeVMSize" {
   type    = "string"
-  default = "Standard_B2s"
+  default = "Standard_D2s_v3"
 }
 
 # OS des noeuds AKS

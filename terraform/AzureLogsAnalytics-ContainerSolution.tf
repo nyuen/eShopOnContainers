@@ -10,9 +10,9 @@
 resource "azurerm_log_analytics_solution" "Terra-Containers-Solution" {
   solution_name         = "${var.OMSSolutionName}"
   location              = "${var.AzureRegion}"
-  resource_group_name   = "${var.RessourceGroup}"
-  workspace_resource_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.id}"
-  workspace_name        = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.name}"
+  resource_group_name   = "${var.ResourceGroup}"
+  workspace_resource_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
+  workspace_name        = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.name}"
 
   plan {
     publisher = "${var.OMSSolutionPublisher}"

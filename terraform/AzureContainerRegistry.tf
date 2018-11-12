@@ -7,10 +7,10 @@
 # ----------------------------------------------------
 
 # Azure Container Registry
-resource "azurerm_container_registry" "Terra-ACR-Stan1" {
+resource "azurerm_container_registry" "Terra-ACR-SpecialK" {
   name                = "${var.ACR-Name}"
-  resource_group_name = "${azurerm_resource_group.Terra-RG-Stan1.name}"
-  location            = "${azurerm_resource_group.Terra-RG-Stan1.location}"
+  resource_group_name = "${azurerm_resource_group.Terra-RG-SpecialK.name}"
+  location            = "${azurerm_resource_group.Terra-RG-SpecialK.location}"
   admin_enabled       = "${var.ACR-Admin-Enabled}"
   sku                 = "${var.ACR-SKU}"
 }
