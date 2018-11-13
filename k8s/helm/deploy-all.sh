@@ -70,6 +70,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+#Applying larger header size to the default AKS ingress controller
+kubectl apply -f aks-httpaddon-cfg.yaml
+
 # container registry must be specified
 if [[ ! $container_registry ]]; then
     echo 'Container registry must be specified (e.g. myregistry.azurecr.io)'
