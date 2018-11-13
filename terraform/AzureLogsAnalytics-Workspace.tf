@@ -9,10 +9,10 @@
 # Variable are defined in var-AzureLogsAnalytics-Workspace.tf
 # ----------------------------------------------------
 
-resource "azurerm_log_analytics_workspace" "Terra-OMSWorkspace-ProjetP" {
+resource "azurerm_log_analytics_workspace" "Terra-OMSWorkspace-SpecialK" {
   name                = "${var.OMSworkspace}"
-  location            = "${azurerm_resource_group.Terra-RG-Stan1.location}"
-  resource_group_name = "${azurerm_resource_group.Terra-RG-Stan1.name}"
+  location            = "${azurerm_resource_group.Terra-RG-SpecialK.location}"
+  resource_group_name = "${azurerm_resource_group.Terra-RG-SpecialK.name}"
   # Possible values : PerNode, Standard, Standalone
   # Standalone = Pricing per Gb, PerNode = OMS licence 
   # More info : https://azure.microsoft.com/en-us/pricing/details/log-analytics/
@@ -23,17 +23,17 @@ resource "azurerm_log_analytics_workspace" "Terra-OMSWorkspace-ProjetP" {
 
 # Output post deployment
 output "Azure Log Analytics Workspace ID" {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.id}"
+    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
 }
 
 output "Azure Log Analytics Workspace Customer ID" {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.workspace_id}"
+    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.workspace_id}"
 }
 
 output "Azure Log Analytics Workspace primary Shared Key " {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.primary_shared_key}"
+    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.primary_shared_key}"
 }
 
 output "Azure Log Analytics Workspace Secondary Shared Key " {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.secondary_shared_key}"
+    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.secondary_shared_key}"
 }

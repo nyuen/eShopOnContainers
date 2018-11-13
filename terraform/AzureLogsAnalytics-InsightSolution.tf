@@ -11,8 +11,8 @@ resource "azurerm_log_analytics_solution" "Terra-Containers-Insight" {
   solution_name         = "ContainerInsights"
   location              = "${var.AzureRegion}"
   resource_group_name   = "${var.ResourceGroup}"
-  workspace_resource_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.id}"
-  workspace_name        = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-ProjetP.name}"
+  workspace_resource_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
+  workspace_name        = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.name}"
 
   plan {
     publisher = "${var.OMSSolutionPublisher}"

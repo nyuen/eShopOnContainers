@@ -12,7 +12,7 @@ variable "OMSworkspace" {
 # More info : https://azure.microsoft.com/en-us/pricing/details/log-analytics/
   variable "OMSworkspaceSKU" {
   type    = "string"
-  default = "Standard"
+  default = "pergb2018"
 }
 
 # Variable pour definir le nb de jours de rétention du workspaceOMS (Azure Logs Analytics)

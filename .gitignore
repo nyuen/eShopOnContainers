@@ -265,6 +265,32 @@ pub/
 /src/Web/WebMVC/Properties/PublishProfiles/publish-module.psm1
 /src/Services/Identity/eShopOnContainers.Identity/Properties/launchSettings.json
 
+#Terraform
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
+# .tfvars files are managed as part of configuration and so should be included in
+# version control.
+#
+# example.tfvars
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+
+
 #Ignore marker-file used to know which docker files we have.
 .eshopdocker_*
 /src/Web/WebMVC/wwwroot/lib

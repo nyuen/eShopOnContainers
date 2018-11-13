@@ -12,12 +12,12 @@ variable "ACR-Name" {
 # Possible values : Classic, Basic, Standard, Premium
 variable "ACR-SKU" {
   type    = "string"
-  # default = "Premium"
+  default = "Premium"
 }
 
 # Variable admin / password for ACR access
 # Possible values : true, false
 variable "ACR-Admin-Enabled" {
   type    = "string"
-  # default = "true"
+  default = "true"
 }
