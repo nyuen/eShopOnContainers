@@ -47,7 +47,8 @@ You can use eshop-namespace.yaml file (in the same directory) to create the name
 END
 }
 
-image_tag=$(date '+%Y%m%d%H%M')
+#image_tag=$(date '+%Y%m%d')
+image_tag='local'
 build_solution=''
 container_registry=''
 build_images='yes'
@@ -97,15 +98,17 @@ fi
 
 if [[ $push_images ]]; then
     echo "#################### Pushing images to registry ####################"
-    services=(basket.api catalog.api identity.api ordering.api marketing.api payment.api locations.api webmvc webspa webstatus)
+    services=(basket.api catalog.api identity.api ordering.api marketing.api payment.api locations.api webmvc webspa webstatus ordering.backgroundtasks ocelotapigw mobileshoppingagg webshoppingagg ordering.signalrhub)
 
     for service in "${services[@]}"
     do
         echo "Pushing image for service $service..."
-        docker tag "eshop/$service:$image_tag" "$container_registry/$service:$image_tag"
-        docker push "$container_registry/$service:$image_tag"
+        docker tag "eshop/$service:$image_tag" "$container_registry/eshop/$service:$image_tag"
+        docker push "$container_registry/eshop/$service:$image_tag"
     done
 fi
+
+externalDns=$(kubectl get svc addon-http-application-routing-nginx-ingress --namespace=kube-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
 
 echo "#################### Cleaning up old deployment ####################"
 kubectl delete deployments --all
@@ -115,87 +118,66 @@ kubectl delete configmap urls || true
 kubectl delete configmap externalcfg || true
 
 echo "#################### Deploying infrastructure components ####################"
-kubectl create configmap config-files --from-file=nginx-conf=nginx.conf
-kubectl label configmap config-files app=eshop
-kubectl create -f sql-data.yaml -f basket-data.yaml -f keystore-data.yaml -f rabbitmq.yaml -f nosql-data.yaml
+kubectl apply -f sql-data.yaml -f basket-data.yaml -f keystore-data.yaml -f rabbitmq.yaml -f nosql-data.yaml -f ingress.yaml -f eshop-namespace.yaml
+
+echo "#################### Deploying Gateway components ####################"
+kubectl create configmap ocelot --from-file=mm=ocelot/configuration-mobile-marketing.json --from-file=ms=ocelot/configuration-mobile-shopping.json --from-file=wm=ocelot/configuration-web-marketing.json --from-file=ws=ocelot/configuration-web-shopping.json
+kubectl apply -f ocelot/deployment.yaml
+kubectl apply -f ocelot/service.yaml
 
 echo "#################### Creating application service definitions ####################"
-kubectl create -f services.yaml -f frontend.yaml
-
-echo "#################### Waiting for Azure to provision external IP ####################"
-
-ip_regex='([0-9]{1,3}\.){3}[0-9]{1,3}'
-while true; do
-    printf "."
-    frontendUrl=$(kubectl get svc frontend -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
-    if [[ $frontendUrl =~ $ip_regex ]]; then
-        break
-    fi
-    sleep 5s
-done
-
-printf "\n"
-externalDns=$frontendUrl
-echo "Using $externalDns as the external DNS/IP of the K8s cluster"
-
+kubectl apply -f services.yaml 
+kubectl apply -f internalurls.yaml
 echo "#################### Creating application configuration ####################"
 
 # urls configmap
 kubectl create configmap urls \
-    "--from-literal=BasketUrl=http://basket" \
-    "--from-literal=BasketHealthCheckUrl=http://basket/hc" \
-    "--from-literal=CatalogUrl=http://$externalDns/catalog-api" \
-    "--from-literal=CatalogHealthCheckUrl=http://catalog/hc" \
-    "--from-literal=PicBaseUrl=http://$externalDns/catalog-api/api/v1/catalog/items/[0]/pic/" \
-    "--from-literal=Marketing_PicBaseUrl=http://$externalDns/marketing-api/api/v1/campaigns/[0]/pic/" \
-    "--from-literal=IdentityUrl=http://$externalDns/identity" \
-    "--from-literal=IdentityHealthCheckUrl=http://identity/hc" \
-    "--from-literal=OrderingUrl=http://ordering" \
-    "--from-literal=OrderingHealthCheckUrl=http://ordering/hc" \
-    "--from-literal=MvcClientExternalUrl=http://$externalDns/webmvc" \
-    "--from-literal=WebMvcHealthCheckUrl=http://webmvc/hc" \
-    "--from-literal=MvcClientOrderingUrl=http://ordering" \
-    "--from-literal=MvcClientCatalogUrl=http://catalog" \
-    "--from-literal=MvcClientBasketUrl=http://basket" \
-    "--from-literal=MvcClientMarketingUrl=http://marketing" \
-    "--from-literal=MvcClientLocationsUrl=http://locations" \
-    "--from-literal=MarketingHealthCheckUrl=http://marketing/hc" \
-    "--from-literal=WebSpaHealthCheckUrl=http://webspa/hc" \
-    "--from-literal=SpaClientMarketingExternalUrl=http://$externalDns/marketing-api" \
-    "--from-literal=SpaClientOrderingExternalUrl=http://$externalDns/ordering-api" \
-    "--from-literal=SpaClientCatalogExternalUrl=http://$externalDns/catalog-api" \
-    "--from-literal=SpaClientBasketExternalUrl=http://$externalDns/basket-api" \
-    "--from-literal=SpaClientIdentityExternalUrl=http://$externalDns/identity" \
-    "--from-literal=SpaClientLocationsUrl=http://$externalDns/locations-api" \
-    "--from-literal=LocationsHealthCheckUrl=http://locations/hc" \
-    "--from-literal=SpaClientExternalUrl=http://$externalDns" \
-    "--from-literal=LocationApiClient=http://$externalDns/locations-api" \
-    "--from-literal=MarketingApiClient=http://$externalDns/marketing-api" \
-    "--from-literal=BasketApiClient=http://$externalDns/basket-api" \
-    "--from-literal=OrderingApiClient=http://$externalDns/ordering-api" \
-    "--from-literal=PaymentHealthCheckUrl=http://payment/hc"
+    "--from-literal=PicBaseUrl=http://$externalDns/webshoppingapigw/api/v1/c/catalog/items/[0]/pic/" \
+    "--from-literal=Marketing_PicBaseUrl=http://$externalDns/webmarketingapigw/api/v1/m/campaigns/[0]/pic/" \
+    "--from-literal=mvc_e=http://$externalDns/webmvc" \
+    "--from-literal=marketingapigw_e=http://$externalDns/webmarketingapigw" \
+    "--from-literal=webshoppingapigw_e=http://$externalDns/webshoppingapigw" \
+    "--from-literal=mobileshoppingagg_e=http://$externalDns/mobileshoppingagg" \
+    "--from-literal=webshoppingagg_e=http://$externalDns/webshoppingagg" \
+    "--from-literal=identity_e=http://$externalDns/identity" \
+    "--from-literal=spa_e=http://$externalDns" \
+    "--from-literal=locations_e=http://$externalDns/locations-api" \
+    "--from-literal=marketing_e=http://$externalDns/marketing-api" \
+    "--from-literal=basket_e=http://$externalDns/basket-api" \
+    "--from-literal=ordering_e=http://$externalDns/ordering-api" \
+    "--from-literal=xamarin_callback_e=http://$externalDns/xamarincallback" \
 
 kubectl label configmap urls app=eshop
 
 # externalcfg configmap -- points to local infrastructure components (rabbitmq, SQL Server etc)
-kubectl create -f conf_local.yml
+kubectl apply -f conf_local.yaml
 
 # Create application pod deployments
-kubectl create -f deployments.yaml
+kubectl apply -f deployments.yaml
 
 echo "#################### Deploying application pods ####################"
 
 # update deployments with the correct image (with tag and/or registry)
-kubectl set image deployments/basket "basket=$container_registry/basket.api:$image_tag"
-kubectl set image deployments/catalog "catalog=$container_registry/catalog.api:$image_tag"
-kubectl set image deployments/identity "identity=$container_registry/identity.api:$image_tag"
-kubectl set image deployments/ordering "ordering=$container_registry/ordering.api:$image_tag"
-kubectl set image deployments/marketing "marketing=$container_registry/marketing.api:$image_tag"
-kubectl set image deployments/locations "locations=$container_registry/locations.api:$image_tag"
-kubectl set image deployments/payment "payment=$container_registry/payment.api:$image_tag"
-kubectl set image deployments/webmvc "webmvc=$container_registry/webmvc:$image_tag"
-kubectl set image deployments/webstatus "webstatus=$container_registry/webstatus:$image_tag"
-kubectl set image deployments/webspa "webspa=$container_registry/webspa:$image_tag"
+kubectl set image deployments/basket "basket=$container_registry/eshop/basket.api:$image_tag"
+kubectl set image deployments/catalog "catalog=$container_registry/eshop/catalog.api:$image_tag"
+kubectl set image deployments/identity "identity=$container_registry/eshop/identity.api:$image_tag"
+kubectl set image deployments/ordering "ordering=$container_registry/eshop/ordering.api:$image_tag"
+kubectl set image deployments/ordering-backgroundtasks "ordering-backgroundtasks=$container_registry/eshop/ordering.backgroundtasks:$image_tag"
+kubectl set image deployments/marketing "marketing=$container_registry/eshop/marketing.api:$image_tag"
+kubectl set image deployments/locations "locations=$container_registry/eshop/locations.api:$image_tag"
+kubectl set image deployments/payment "payment=$container_registry/eshop/payment.api:$image_tag"
+kubectl set image deployments/webmvc "webmvc=$container_registry/eshop/webmvc:$image_tag"
+kubectl set image deployments/webstatus "webstatus=$container_registry/eshop/webstatus:$image_tag"
+kubectl set image deployments/webspa "webspa=$container_registry/eshop/webspa:$image_tag"
+kubectl set image deployments/apigwws "apigwws=$container_registry/eshop/ocelotapigw:$image_tag"
+kubectl set image deployments/apigwwm "apigwwm=$container_registry/eshop/ocelotapigw:$image_tag"
+kubectl set image deployments/apigwms "apigwms=$container_registry/eshop/ocelotapigw:$image_tag"
+kubectl set image deployments/apigwmm "apigwmm=$container_registry/eshop/ocelotapigw:$image_tag"
+kubectl set image deployments/ordering-signalrhub "ordering-signalrhub=$container_registry/eshop/ordering.signalrhub:$image_tag"
+
+kubectl set image deployments/mobileshoppingagg "mobileshoppingagg=$container_registry/eshop/mobileshoppingagg:$image_tag"
+kubectl set image deployments/webshoppingagg "webshoppingagg=$container_registry/eshop/webshoppingagg:$image_tag"
+
 
 kubectl rollout resume deployments/basket
 kubectl rollout resume deployments/catalog
@@ -207,6 +189,18 @@ kubectl rollout resume deployments/payment
 kubectl rollout resume deployments/webmvc
 kubectl rollout resume deployments/webstatus
 kubectl rollout resume deployments/webspa
+kubectl rollout resume deployments/apigwws
+kubectl rollout resume deployments/apigwwm
+kubectl rollout resume deployments/apigwms
+kubectl rollout resume deployments/apigwmm
+kubectl rollout resume deployments/mobileshoppingagg
+kubectl rollout resume deployments/webshoppingagg
+kubectl rollout resume deployments/apigwmm
+kubectl rollout resume deployments/apigwms
+kubectl rollout resume deployments/apigwwm
+kubectl rollout resume deployments/apigwws
+kubectl rollout resume deployments/ordering-signalrhub
+kubectl rollout resume deployments/ordering-backgroundtasks
 
 echo "WebSPA is exposed at http://$externalDns, WebMVC at http://$externalDns/webmvc, WebStatus at http://$externalDns/webstatus"
 echo "eShopOnContainers deployment is DONE"

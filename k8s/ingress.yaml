@@ -6,7 +6,9 @@ metadata:
     component: frontend
   name: eshop-ingress
   annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"  
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: addon-http-application-routing
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"  
 spec:
   rules:
   - http:
