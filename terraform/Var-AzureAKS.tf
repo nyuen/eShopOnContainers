@@ -19,7 +19,7 @@ variable "Nb-NodesKubernetes" {
 # Kubernetes Version
 variable "KubernetesVersion" {
   type    = "string"
-  default = "1.11.2"
+  default = "1.11.3"
 }
 
 # Variable DNS Préfixe
