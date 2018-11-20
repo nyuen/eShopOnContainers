@@ -14,99 +14,7 @@ set -euo pipefail
  
 # Feel free to submit a PR in order to improve it.
 
-usage()
-{
-    cat <<END
-deploy.sh: deploys eShopOnContainers application to Kubernetes cluster
-Parameters:
-  -r | --registry <container registry> 
-    Specifies container registry (ACR) to use (required), e.g. myregistry.azurecr.io
-  -t | --tag <docker image tag> 
-    Default: newly created, date-based timestamp, with 1-minute resolution
-  -b | --build-solution
-    Force solution build before deployment (default: false)
-  --skip-image-build
-    Do not build images (default is to build all images)
-  --skip-image-push
-    Do not upload images to the container registry (just run the Kubernetes deployment portion)
-    Default is to push images to container registry
-  -h | --help
-    Displays this help text and exits the script
 
-It is assumed that the Kubernetes AKS cluster has been granted access to ACR registry.
-For more info see 
-https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
-
-WARNING! THE SCRIPT WILL COMPLETELY DESTROY ALL DEPLOYMENTS AND SERVICES VISIBLE
-FROM THE CURRENT CONFIGURATION CONTEXT.
-It is recommended that you create a separate namespace and confguration context
-for the eShopOnContainers application, to isolate it from other applications on the cluster.
-For more information see https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
-You can use eshop-namespace.yaml file (in the same directory) to create the namespace.
-
-END
-}
-
-#image_tag=$(date '+%Y%m%d')
-image_tag='local'
-build_solution=''
-container_registry=''
-build_images='yes'
-push_images='yes'
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    -r | --registry )
-        container_registry="$2"; shift 2 ;;
-    -t | --tag )
-        image_tag="$2"; shift 2 ;;
-    -b | --build-solution )
-        build_solution='yes'; shift ;;
-    --skip-image-build )
-        build_images=''; shift ;;
-    --skip-image-push )
-        push_images=''; shift ;;
-    -h | --help )
-        usage; exit 1 ;;
-    *)
-        echo "Unknown option $1"
-        usage; exit 2 ;;
-  esac
-done
-
-if [[ ! $container_registry ]]; then
-    echo 'Container registry must be specified (e.g. myregistry.azurecr.io)'
-    echo ''
-    usage
-    exit 3
-fi
-
-if [[ $build_solution ]]; then
-    echo "#################### Building eShopOnContainers solution ####################"
-    dotnet publish -o obj/Docker/publish ../eShopOnContainers-ServicesAndWebApps.sln
-fi
-
-export TAG=$image_tag
-
-if [[ $build_images ]]; then
-    echo "#################### Building eShopOnContainers Docker images ####################"
-    docker-compose -p .. -f ../docker-compose.yml build
-
-    # Remove temporary images
-    docker rmi $(docker images -qf "dangling=true")
-fi
-
-if [[ $push_images ]]; then
-    echo "#################### Pushing images to registry ####################"
-    services=(basket.api catalog.api identity.api ordering.api marketing.api payment.api locations.api webmvc webspa webstatus ordering.backgroundtasks ocelotapigw mobileshoppingagg webshoppingagg ordering.signalrhub)
-
-    for service in "${services[@]}"
-    do
-        echo "Pushing image for service $service..."
-        docker tag "eshop/$service:$image_tag" "$container_registry/eshop/$service:$image_tag"
-        docker push "$container_registry/eshop/$service:$image_tag"
-    done
-fi
 
 externalDns=$(kubectl get svc addon-http-application-routing-nginx-ingress --namespace=kube-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
 
@@ -158,7 +66,25 @@ kubectl apply -f deployments.yaml
 echo "#################### Deploying application pods ####################"
 
 # update deployments with the correct image (with tag and/or registry)
+ubectl set image deployments/basket "basket=nyuen/basket.api:hub"
+kubectl set image deployments/catalog "catalog=nyuen/catalog.api:hub"
+kubectl set image deployments/identity "identity=nyuen/identity.api:hub"
+kubectl set image deployments/ordering "ordering=nyuen/ordering.api:hub"
+kubectl set image deployments/ordering-backgroundtasks "ordering-backgroundtasks=nyuen/ordering.backgroundtasks:hub"
+kubectl set image deployments/marketing "marketing=nyuen/marketing.api:hub"
+kubectl set image deployments/locations "locations=nyuen/locations.api:hub"
+kubectl set image deployments/payment "payment=nyuen/payment.api:hub"
+kubectl set image deployments/webmvc "webmvc=nyuen/webmvc:hub"
+kubectl set image deployments/webstatus "webstatus=nyuen/webstatus:hub"
+kubectl set image deployments/webspa "webspa=nyuen/webspa:hub"
+kubectl set image deployments/apigwws "apigwws=nyuen/ocelotapigw:hub"
+kubectl set image deployments/apigwwm "apigwwm=nyuen/ocelotapigw:hub"
+kubectl set image deployments/apigwms "apigwms=nyuen/ocelotapigw:hub"
+kubectl set image deployments/apigwmm "apigwmm=nyuen/ocelotapigw:hub"
+kubectl set image deployments/ordering-signalrhub "ordering-signalrhub=nyuen/ordering.signalrhub:hub"
 
+kubectl set image deployments/mobileshoppingagg "mobileshoppingagg=nyuen/mobileshoppingagg:hub"
+kubectl set image deployments/webshoppingagg "webshoppingagg=nyuen/webshoppingagg:hub"
 kubectl rollout resume deployments/basket
 kubectl rollout resume deployments/catalog
 kubectl rollout resume deployments/identity
