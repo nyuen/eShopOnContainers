@@ -33,7 +33,7 @@ variable "DNSPrefix" {
 # Variable nom d'admin
 variable "AdminName" {
   type    = "string"
-  default = "stan"
+  default = "specialk"
 }
 
 # Variable clé publique SSH

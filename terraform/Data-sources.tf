@@ -9,12 +9,12 @@ data "azurerm_key_vault_secret" "Terra-Datasource-cleSSH" {
   # This is a secret in Azure Key Vault that contains my SSH Key
   name      = "clePubliqueSSH"
   # This is my vault so you need to replace the following uri by the uri of your Azure Key Vault
-  vault_uri = "${var.keyvaulturl}"
+  vault_uri = "${var.KeyVaultUrl}"
 }
 output "clePubliqueSSH" {
   value = "${data.azurerm_key_vault_secret.Terra-Datasource-cleSSH.value}"
 }
 
-variable "keyvaulturl" {
+variable "KeyVaultUrl" {
   type = "string"
 }
