@@ -77,7 +77,7 @@ kubectl set image deployments/webshoppingagg "webshoppingagg=nyuen/webshoppingag
 ```
 
 # Ready to roll!
-
+```
 kubectl rollout resume deployments/basket
 kubectl rollout resume deployments/catalog
 kubectl rollout resume deployments/identity
@@ -102,20 +102,25 @@ kubectl rollout resume deployments/ordering-signalrhub
 kubectl rollout resume deployments/ordering-backgroundtasks
 
 kubectl apply -f helm/aks-httpaddon-cfg.yaml
-
+```
 
 # HELM hands-on
 In this section we will deploy the _basket-api_ using **Helm Charts** instead of _manuel_ K8s deployment files
 
 ### make sure that the helm cli is installed
+
+```
 wget https://storage.googleapis.com/kubernetes-helm/helm-v2.11.0-linux-amd64.tar.gz
 tar -zxvf helm-v2.11.0-linux-amd64.tgz
 mv linux-amd64/helm /usr/local/bin/helm
+```
 
 ### let's configure our AKS cluster to support HELM
 
+```
 helm version
 helm init
+```
 
 ## Now let's deploy our application
 
@@ -153,6 +158,7 @@ helm upgrade --install \
 
 In the command below, note that we are _injecting_ values in helm, helm will then modify/generate the deployment files defined in the template to reflect these values. Behing the scenes helm uses Go Templates.
 
+```
 helm upgrade --install
 			  --values app.yaml \
 			  --values inf.yaml \
@@ -164,3 +170,4 @@ helm upgrade --install
 			  --set image.tag="latest" \
 			  --set image.pullPolicy="Always" \
 			 --force  "eshop-aks-basket-api" basket-api
+```
