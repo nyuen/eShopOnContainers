@@ -14,11 +14,12 @@ kubectl apply -f ocelot/service.yaml
 ```
 
 ## Creating services (load balancing)
+```
 kubectl apply -f services.yaml
 kubectl apply -f internalurls.yaml
 externalDns=$(kubectl get svc addon-http-application-routing-nginx-ingress --namespace=kube-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
 echo $externalDns
-
+```
 
 ## Creating Configuration
 ```

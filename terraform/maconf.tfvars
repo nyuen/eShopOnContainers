@@ -1,5 +1,5 @@
 AzureRegion = "WestEurope"
-RessourceGroup = "RG-SpecialK"
+ResourceGroup = "RG-SpecialK"
 AKS-Name = "SpecialK"
 Nb-NodesKubernetes = "3"
 KubernetesVersion = "1.11.3"
