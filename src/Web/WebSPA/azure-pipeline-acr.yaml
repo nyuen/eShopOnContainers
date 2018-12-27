@@ -1,6 +1,14 @@
-
 trigger:
-  batch: true
+  batch: false
+  branches:
+    include:
+      - dev
+  paths:
+   include:
+    - src/web/WebSPA/*
+
+pr:
+  batch: false
   branches:
     include:
       - dev
@@ -54,13 +62,13 @@ jobs:
 
   condition: succeeded()
   pool:
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'vs2017-win2016'
   steps:
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
     displayName: 'Run CredScan'
     inputs:
       debugMode: false
-
+      scanFolder: 'src/Web/WebSPA'
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
     displayName: 'Publish Security Analysis Logs'
