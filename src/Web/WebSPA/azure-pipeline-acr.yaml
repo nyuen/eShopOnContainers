@@ -8,7 +8,6 @@ trigger:
     - src/web/WebSPA/*
 
 pr:
-  batch: false
   branches:
     include:
       - dev
