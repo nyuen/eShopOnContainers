@@ -30,6 +30,7 @@ phases:
       azureContainerRegistry: niyuen.azurecr.io
       imageName: 'niyuen.azurecr.io/eshop/webspa:$(Build.BuildId)'
       dockerFile: 'src/Web/WebSPA/Dockerfile'
+      buildContext: .
 
   - task: Docker@1
     displayName: Login
