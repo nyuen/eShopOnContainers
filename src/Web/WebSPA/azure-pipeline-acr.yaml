@@ -14,13 +14,14 @@ variables:
 
 resources:
 - repo: self
-phases:
-- phase: Phase_1
+
+jobs:
+- job: Phase_1
   displayName: eShopOnContainers build
 
   condition: succeeded()
-  queue:
-    name: Hosted Ubuntu 1604
+  pool:
+    vmImage: 'ubuntu-16.04'
 
   steps:
   - task: Docker@1
@@ -48,12 +49,12 @@ phases:
       azureContainerRegistry: niyuen.azurecr.io
       imageName: 'niyuen.azurecr.io/eshop/webspa:$(Build.BuildId)'
 
-- phase: Phase_2
+- job: Phase_2
   displayName: CredScan
 
   condition: succeeded()
-  queue:
-    name: Hosted VS2017
+  pool:
+    vmImage: 'ubuntu-16.04'
   steps:
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
     displayName: 'Run CredScan'
