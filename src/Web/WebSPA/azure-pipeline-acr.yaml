@@ -5,7 +5,7 @@ trigger:
       - dev
   paths:
    include:
-    - /src/web/WebSPA/*
+    - src/Web/WebSPA/*
 
 pr:
   branches:
@@ -13,7 +13,7 @@ pr:
       - dev
   paths:
    include:
-    - /src/web/WebSPA/*
+    - src/Web/WebSPA/*
 
 variables:
   imageName: 'eshop/webspa:$(Build.BuildId)'
