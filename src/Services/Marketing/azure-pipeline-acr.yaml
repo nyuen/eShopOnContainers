@@ -5,7 +5,7 @@ trigger:
       - dev
   paths:
    include:
-    - src/Web/WebMVC/*
+    - src/Services/Marketing/*
 
 pr:
   branches:
@@ -13,10 +13,10 @@ pr:
       - dev
   paths:
    include:
-    - src/Web/WebMVC/*
+    - src/Services/Marketing/*
 
 variables:
-  imageName: 'eshop/webmvc:$(Build.BuildId)'
+  imageName: 'eshop/marketing.api:$(Build.BuildId)'
   # define two more variables dockerId and dockerPassword in the build pipeline in UI
 
 resources:
@@ -32,12 +32,12 @@ jobs:
 
   steps:
   - task: Docker@1
-    displayName: 'Build the WebMVC docker image'
+    displayName: 'Build the Marketing API docker image'
     inputs:
       azureSubscriptionEndpoint: 'niyuen (6f3097c6-c15a-44e4-89ba-990aa1a690ec)'
       azureContainerRegistry: niyuen.azurecr.io
-      imageName: 'niyuen.azurecr.io/eshop/webmvc:$(Build.BuildNumber)'
-      dockerFile: 'src/Web/WebMVC/Dockerfile'
+      imageName: 'niyuen.azurecr.io/eshop/marketing.api:$(Build.BuildNumber)'
+      dockerFile: 'src/Services/Marketing/Marketing.API/Dockerfile'
       useDefaultContext: false
       buildContext: .
 
@@ -49,17 +49,17 @@ jobs:
       command: login
 
   - task: Docker@1
-    displayName: 'Push the WebMVC image to the ACR'
+    displayName: 'Push the basket api image to the ACR'
     inputs:
       command: 'push'
       azureSubscriptionEndpoint: 'niyuen (6f3097c6-c15a-44e4-89ba-990aa1a690ec)'
       azureContainerRegistry: niyuen.azurecr.io
-      imageName: 'niyuen.azurecr.io/eshop/webmvc:$(Build.BuildNumber)'
+      imageName: 'niyuen.azurecr.io/eshop/marketing.api:$(Build.BuildNumber)'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
     inputs:
-      PathtoPublish: k8s/helm/webmvc
+      PathtoPublish: k8s/helm/marketing-api
       ArtifactName: helm
 
 
@@ -75,7 +75,7 @@ jobs:
     displayName: 'Run CredScan'
     inputs:
       debugMode: false
-      scanFolder: 'src/Web/WebMVC'
+      scanFolder: 'src/Services/Marketing'
 
   - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@2
     displayName: 'Publish Security Analysis Logs'
