@@ -16,7 +16,7 @@ pr:
     - src/Services/Basket/*
 
 variables:
-  imageName: 'eshop/webmvc:$(Build.BuildId)'
+  imageName: 'eshop/basket.api:$(Build.BuildId)'
   # define two more variables dockerId and dockerPassword in the build pipeline in UI
 
 resources:
@@ -54,7 +54,7 @@ jobs:
       command: 'push'
       azureSubscriptionEndpoint: 'niyuen (6f3097c6-c15a-44e4-89ba-990aa1a690ec)'
       azureContainerRegistry: niyuen.azurecr.io
-      imageName: 'niyuen.azurecr.io/eshop/basketapi:$(Build.BuildNumber)'
+      imageName: 'niyuen.azurecr.io/eshop/basket.api:$(Build.BuildNumber)'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
