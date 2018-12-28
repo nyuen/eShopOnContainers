@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/niyuen/specialK/_apis/build/status/specialK-Docker%20container-CI?branchName=dev)](https://dev.azure.com/niyuen/specialK/_build/latest?definitionId=12?branchName=dev)
+
 # eShopOnContainers - Microservices Architecture and Containers based Reference Application (**BETA state** - Visual Studio 2017 and CLI environments compatible)
 Sample .NET Core reference application, powered by Microsoft, based on a simplified microservices architecture and Docker containers.
 
