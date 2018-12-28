@@ -59,7 +59,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
     inputs:
-      PathtoPublish: k8s/helm/ordering-signalrhub
+      PathtoPublish: k8s/helm/ordering-backgroundtasks
       ArtifactName: helm
 
 
