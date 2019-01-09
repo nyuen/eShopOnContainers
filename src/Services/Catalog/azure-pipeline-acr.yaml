@@ -18,9 +18,9 @@ pr:
 variables:
   imageName: 'eshop/catalog.api:$(Build.BuildId)'
   major: 0
-  minor: 1
+  minor: 2
   # creates a counter called versioncounter and seeds it at 100 and then assigns the value to a variable named patch.
-  patch: $[counter('versioncounter', 100)]
+  patch: 1
 
 resources:
 - repo: self
@@ -52,12 +52,14 @@ jobs:
       command: login
 
   - task: Docker@1
-    displayName: 'Push the basket api image to the ACR'
+    displayName: 'Push the catalog api image to the ACR'
     inputs:
       command: 'push'
       azureSubscriptionEndpoint: 'niyuen (6f3097c6-c15a-44e4-89ba-990aa1a690ec)'
       azureContainerRegistry: niyuen.azurecr.io
-      imageName: 'niyuen.azurecr.io/eshop/catalog.api:$(major).$(minor).$(patch)'
+      imageName: 'niyuen.azurecr.io/eshop/catalog.api:$(major).$(minor).$(patch)-$(Build.BuildNumber)'
+  
+  - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> Build.ArtifactStagingDirectory/releaseVersion.txt"
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
