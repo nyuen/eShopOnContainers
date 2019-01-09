@@ -59,7 +59,7 @@ jobs:
       azureContainerRegistry: niyuen.azurecr.io
       imageName: 'niyuen.azurecr.io/eshop/catalog.api:$(major).$(minor).$(patch)-$(Build.BuildNumber)'
   
-  - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> Build.ArtifactStagingDirectory/k8s/helm/catalog-api/catalogVersion.txt"
+  - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> $(Build.ArtifactStagingDirectory)/k8s/helm/catalog-api/catalogVersion.txt"
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
