@@ -13,13 +13,23 @@ kubectl apply -f ocelot/deployment.yaml
 kubectl apply -f ocelot/service.yaml
 ```
 
-## Creating services (load balancing)
+## Creating services (load balancing) using BASH
 ```
 kubectl apply -f services.yaml
 kubectl apply -f internalurls.yaml
 externalDns=$(kubectl get svc addon-http-application-routing-nginx-ingress --namespace=kube-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
 echo $externalDns
 ```
+
+
+## Creating services (load balancing) using Powershell
+```
+kubectl apply -f services.yaml
+kubectl apply -f internalurls.yaml
+$externalDns=(kubectl get svc addon-http-application-routing-nginx-ingress --namespace=kube-system -o=jsonpath="{.status.loadBalancer.ingress[0].ip}")
+echo $externalDns
+```
+
 
 ## Creating Configuration
 ```
