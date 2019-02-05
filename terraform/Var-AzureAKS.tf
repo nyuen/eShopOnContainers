@@ -17,9 +17,11 @@ variable "Nb-NodesKubernetes" {
 }
 
 # Kubernetes Version
+# Use the AZ CLI command line to check available versions
+# az aks get-versions --location westeurope
 variable "KubernetesVersion" {
   type    = "string"
-  default = "1.11.3"
+  default = "1.11.6"
 }
 
 # Variable DNS Préfixe
