@@ -11,6 +11,11 @@ service:
   type: ClusterIP
   port: 80
 
+version:
+  blue: 0.1.100
+  green: 0.1.100
+  green_enabled: true
+  currentSlot: "blue"
 
 resources: {}
 

@@ -1,6 +1,6 @@
 {{- $name := include "catalog-api.fullname" . -}}
 {{- $cfgname := printf "%s-%s" "cfg" $name -}}
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "catalog-api.fullname" . }}
@@ -16,11 +16,15 @@ spec:
     matchLabels:
       app: {{ template "catalog-api.name" . }}
       release: {{ .Release.Name }}
+      color: blue
   template:
     metadata:
       labels:
         app: {{ template "catalog-api.name" . }}
         release: {{ .Release.Name }}
+        version: {{ .Values.version.blue }}
+        color: blue
+
     spec:
       {{ if .Values.inf.registry -}}
       imagePullSecrets:
@@ -28,7 +32,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ template "fqdn-image" . }}:{{ .Values.image.tag }}"
+          image: "{{ template "fqdn-image" . }}:{{ .Values.version.blue }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: PATH_BASE

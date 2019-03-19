@@ -119,6 +119,7 @@ spec:
         app: eshop
         component: identity
     spec:
+     
       containers:
       - name: identity
         image: eshop/identity.api
