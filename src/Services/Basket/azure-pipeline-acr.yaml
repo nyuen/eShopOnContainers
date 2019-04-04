@@ -40,6 +40,21 @@ jobs:
       dockerFile: 'src/Services/Basket/Basket.API/Dockerfile'
       useDefaultContext: false
       buildContext: .
+      
+  - script: |
+      export id=$(docker images --filter "label=test=true" -q | head -1)
+      docker create --name testcontainer $id
+      docker cp testcontainer:/TestResults ./TestResults
+      docker rm testcontainer
+    displayName: 'get test results'
+  
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/test*.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)/TestResults'
+      publishRunAttachments: true
+    displayName: 'Publish test results'
 
   - task: Docker@1
     displayName: Login
