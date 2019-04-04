@@ -9,6 +9,23 @@ WORKDIR /src/src/Services/Catalog/Catalog.API
 RUN dotnet restore -nowarn:msb3202,nu1503
 RUN dotnet build --no-restore -c Release -o /app
 
+FROM build as unittest
+LABEL test=true
+RUN dotnet tool install dotnet-reportgenerator-globaltool --version 4.0.6 --tool-path /tools
+WORKDIR /src/src/Services/Catalog/Catalog.UnitTests
+RUN dotnet test --logger "trx;LogFileName=test_results.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/coverage/ 
+# generate html reports using report generator tool
+RUN ls -lar TestResults
+WORKDIR /TestResults
+RUN cp -r /src/src/Services/Catalog/Catalog.UnitTests/TestResults .
+
+FROM build as testrunner
+WORKDIR /src/src/Services/Catalog/Catalog.UnitTests
+ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+
+FROM build as functionaltest
+WORKDIR /src/src/Services/Catalog/Catalog.FunctionalTests
+
 FROM build AS publish
 RUN dotnet publish --no-restore -c Release -o /app
 

@@ -44,6 +44,13 @@ jobs:
       useDefaultContext: false
       buildContext: .
 
+  - script: |
+      export id=$(docker images --filter "label=test=true" -q | head -1)
+      docker create --name testcontainer $id
+      docker cp testcontainer:/TestResults ./TestResults
+      docker rm testcontainer
+    displayName: 'get test results'
+
   - task: Docker@1
     displayName: Login
     inputs:
@@ -59,8 +66,16 @@ jobs:
       azureContainerRegistry: niyuen.azurecr.io
       imageName: 'niyuen.azurecr.io/eshop/catalog.api:$(major).$(minor).$(patch)-$(Build.BuildNumber)'
   
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/test*.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)/TestResults'
+      publishRunAttachments: true
+    displayName: 'Publish test results'
+ 
   - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> $(Build.SourcesDirectory)/k8s/helm/catalog-api/catalogVersion.txt"
-  - 
+  
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
     inputs:

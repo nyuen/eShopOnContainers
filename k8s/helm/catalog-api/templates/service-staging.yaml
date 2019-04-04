@@ -1,7 +1,8 @@
+{{ if .Values.version.green_enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.app.svc.catalog }}
+  name: {{ .Values.app.svc.catalog }}-staging
   labels:
     app: {{ template "catalog-api.name" . }}
     chart: {{ template "catalog-api.chart" . }}
@@ -17,4 +18,5 @@ spec:
   selector:
     app: {{ template "catalog-api.name" . }}
     release: {{ .Release.Name }}
-    version: {{ .Values.version.blue }}
+    version: {{ .Values.version.green }}
+{{ end }}
