@@ -17,7 +17,7 @@ pr:
 
 variables:
   - name: imageName
-  - value: 'eshop/basket.api:$(Build.BuildId)'
+    value: 'eshop/basket.api:$(Build.BuildId)'
   # define two more variables dockerId and dockerPassword in the build pipeline in UI
   
 

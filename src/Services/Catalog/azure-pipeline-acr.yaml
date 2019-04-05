@@ -17,13 +17,13 @@ pr:
 
 variables:
   - name: imageName
-  - value: eshop/catalog.api:$(Build.BuildId)'
+    value: eshop/catalog.api:$(Build.BuildId)'
   - name: major
-  - value: 0
+    value: 0
   - name: minor
-  - value: 2
+    value: 2
   - name: patch
-  - value: 1
+    value: 1
   # define two more variables dockerId and dockerPassword in the build pipeline in UI
   - group: eShopOnContainers
   - name: catalogAPI_version
