@@ -14,7 +14,6 @@ LABEL test=true
 RUN dotnet tool install dotnet-reportgenerator-globaltool --version 4.0.6 --tool-path /tools
 WORKDIR /src/src/Services/Catalog/Catalog.UnitTests
 RUN dotnet test --logger "trx;LogFileName=test_results.xml" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/coverage/ 
-# generate html reports using report generator tool
 RUN ls -lar TestResults
 WORKDIR /TestResults
 RUN cp -r /src/src/Services/Catalog/Catalog.UnitTests/TestResults .

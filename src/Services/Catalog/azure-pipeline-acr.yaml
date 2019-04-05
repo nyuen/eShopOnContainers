@@ -16,11 +16,18 @@ pr:
     - src/Services/Catalog/*
 
 variables:
-  imageName: 'eshop/catalog.api:$(Build.BuildId)'
-  major: 0
-  minor: 2
-  # creates a counter called versioncounter and seeds it at 100 and then assigns the value to a variable named patch.
-  patch: 1
+  - name: imageName
+  - value: eshop/catalog.api:$(Build.BuildId)'
+  - name: major
+  - value: 0
+  - name: minor
+  - value: 2
+  - name: patch
+  - value: 1
+  # define two more variables dockerId and dockerPassword in the build pipeline in UI
+  - group: eShopOnContainers
+  - name: catalogAPI_version
+    value: '$(major).$(minor).$(patch)-$(Build.BuildNumber)'
 
 resources:
 - repo: self
