@@ -83,11 +83,32 @@ jobs:
  
   - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> $(Build.SourcesDirectory)/k8s/helm/catalog-api/catalogVersion.txt"
   
+  - task: CopyFiles@2
+    inputs:
+      contents: k8s/helm/catalog-api/**
+      targetFolder: $(Build.ArtifactStagingDirectory)/catalog-api
+  
+  - task: CopyFiles@2
+    inputs:
+      contents: k8s/helm/*.yaml
+      targetFolder: $(Build.ArtifactStagingDirectory)/shared-yaml
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: $(Build.ArtifactStagingDirectory)
+      artifactName: helm-test
+
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: helm'
     inputs:
       PathtoPublish: k8s/helm/catalog-api
       ArtifactName: helm
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: helm shared'
+    inputs:
+      PathtoPublish: k8s/helm/
+      ArtifactName: helm-shared
 
 
 

@@ -1,7 +1,7 @@
 echo "Checking Chart Status"
 helmStatus=$( (helm status eshoponcontainers-aks-catalog-api | grep "STATUS: " | awk -F': ' '{print $2}'))
 
-if [ $helmStatus = "DEPLOYED" ]; then
+if [ "$helmStatus" = "DEPLOYED" ]; then
 
     #Get current slot in production
     currentVersion=$( (
@@ -28,9 +28,9 @@ echo -e "${RED}new Release version = ${newRelease}${NC}"
 echo -e "${BLUE}blue Release version = ${blueRelease}${NC}"
 echo -e "${GREEN}green Release version = ${greenRelease}${NC}"
 
-if [ $currentVersion = "green" ]; then
+if [ "$currentVersion" = "green" ]; then
     newVersion="blue"
-    helm upgrade --install --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/app.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/inf.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/ingress_values.yaml" --set inf.k8s.dns="$(external_dns)" --set inf.registry.server="$(container_registry)" --set image.tag="$(Build.BuildNumber)" --set image.pullPolicy="Always" --set inf.appinsights.key="$(app_insight)" --set version.blue=$greenRelease --set version.green=$newRelease
+    helm upgrade --install --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/app.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/inf.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/ingress_values.yaml" --set inf.k8s.dns="$(external_dns)" --set inf.registry.server="$(container_registry)" --set image.tag="$(Build.BuildNumber)" --set image.pullPolicy="Always" --set inf.appinsights.key="$(app_insight)" --set version.blue=$greenRelease --set version.green=$newRelease $(app_name)-catalog-api "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm"
 else
-    helm upgrade --install --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/app.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/inf.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/ingress_values.yaml" --set inf.k8s.dns="$(external_dns)" --set inf.registry.server="$(container_registry)" --set image.tag="$(Build.BuildNumber)" --set image.pullPolicy="Always" --set inf.appinsights.key="$(app_insight)" --set version.blue=$blueRelease --set version.green=$greenRelease
+    helm upgrade --install --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/app.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/inf.yaml" --values "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm/ingress_values.yaml" --set inf.k8s.dns="$(external_dns)" --set inf.registry.server="$(container_registry)" --set image.tag="$(Build.BuildNumber)" --set image.pullPolicy="Always" --set inf.appinsights.key="$(app_insight)" --set version.blue=$blueRelease --set version.green=$greenRelease $(app_name)-catalog-api "$(System.DefaultWorkingDirectory)/_specialK-Docker container-CI/helm"
 fi
