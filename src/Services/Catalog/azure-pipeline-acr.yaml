@@ -96,21 +96,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: $(Build.ArtifactStagingDirectory)
-      artifactName: helm-test
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: helm'
-    inputs:
-      PathtoPublish: k8s/helm/catalog-api
-      ArtifactName: helm
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifact: helm shared'
-    inputs:
-      PathtoPublish: k8s/helm/
-      ArtifactName: helm-shared
-
-
+      artifactName: helm       
 
 - job: Phase_2
   displayName: CredScan
