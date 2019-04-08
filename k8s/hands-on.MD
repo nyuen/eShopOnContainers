@@ -31,7 +31,7 @@ echo $externalDns
 ```
 
 
-## Creating Configuration
+## Creating Configuration (Bash only)
 ```
 kubectl create configmap urls \
     "--from-literal=PicBaseUrl=http://$externalDns/webshoppingapigw/api/v1/c/catalog/items/[0]/pic/" \
