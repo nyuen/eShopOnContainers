@@ -11,12 +11,12 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     newVersion="green"
     blueRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'blue: ' | awk -F': ' '{print $2}'))
     greenRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'green: ' | awk -F': ' '{print $2}'))
-    newRelease=$(catalogAPI_version)
+    newRelease=`cat $(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api⁩/⁨k8s⁩/⁨helm⁩/⁨catalog-api⁩`
 else
     currentVersion="green"
     blueRelease=$(catalogAPI_version)
     greenRelease=$(catalogAPI_version)
-    newRelease=$(catalogAPI_version)
+    newRelease=`cat $(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api⁩/⁨k8s⁩/⁨helm⁩/⁨catalog-api⁩`
 fi
 
 RED='\033[0;31m'

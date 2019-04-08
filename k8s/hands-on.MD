@@ -122,10 +122,6 @@ kubectl rollout resume deployments/payment
 kubectl rollout resume deployments/webmvc
 kubectl rollout resume deployments/webstatus
 kubectl rollout resume deployments/webspa
-kubectl rollout resume deployments/apigwws
-kubectl rollout resume deployments/apigwwm
-kubectl rollout resume deployments/apigwms
-kubectl rollout resume deployments/apigwmm
 kubectl rollout resume deployments/mobileshoppingagg
 kubectl rollout resume deployments/webshoppingagg
 kubectl rollout resume deployments/apigwmm
