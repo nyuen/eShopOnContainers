@@ -18,5 +18,7 @@ spec:
   selector:
     app: {{ template "catalog-api.name" . }}
     release: {{ .Release.Name }}
-    version: {{ .Values.version.green }}
+    #version: {{ .Values.version.green }}
+    color: {{ .Values.version.stagingSlot }}
+
 {{ end }}

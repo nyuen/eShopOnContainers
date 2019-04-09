@@ -16,7 +16,7 @@ version:
   green: 0.1.100
   green_enabled: true
   productionSlot: "blue"
-  statingSlot: "green"
+  stagingSlot: "green"
 
 resources: {}
 
