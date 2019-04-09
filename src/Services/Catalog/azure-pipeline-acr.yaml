@@ -82,7 +82,7 @@ jobs:
       imageName: 'niyuen.azurecr.io/eshop/catalog.api:$(major).$(minor).$(patch)-$(Build.BuildNumber)'
  
   - bash: "echo $(major).$(minor).$(patch)-$(Build.BuildNumber) >> $(Build.SourcesDirectory)/k8s/helm/catalog-api/catalogVersion.txt"
-  
+
   - task: CopyFiles@2
     inputs:
       contents: k8s/helm/catalog-api/**
