@@ -93,6 +93,11 @@ jobs:
       contents: k8s/helm/*.yaml
       targetFolder: $(Build.ArtifactStagingDirectory)/shared-yaml
 
+  - task: CopyFiles@2
+    inputs:
+      contents: src/Services/Catalog/deployScripts/**
+      targetFolder: $(Build.ArtifactStagingDirectory)/deployScripts
+
   - task: PublishBuildArtifacts@1
     inputs:
       pathtoPublish: $(Build.ArtifactStagingDirectory)
