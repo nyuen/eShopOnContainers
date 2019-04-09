@@ -19,7 +19,7 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     if [ "$productionSlot" = "" ]; then
         productionSlot="blue"
     fi
-    if [ "$stagingSlot" = ""]; then
+    if [ "$stagingSlot" = "" ]; then
         stagingSlot="green"
     fi
 
@@ -27,7 +27,7 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     blueRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'blue: ' | awk -F': ' '{print $2}'))
     greenRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'green: ' | awk -F': ' '{print $2}'))
     #if the current production slot is blue then we need to deploy the new release in the green slot
-    if [ "$productionSlot" = "blue"]; then
+    if [ "$productionSlot" = "blue" ]; then
         greenRelease = $newRelease
     else
         blueRelease = $newRelease
