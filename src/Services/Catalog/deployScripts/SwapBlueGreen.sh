@@ -23,7 +23,7 @@ productionSlot=$( (
         stagingSlot="green"
     fi
 
-    $green_enabled=true
+    green_enabled=true
     blueRelease=$(blueRelease)
     greenRelease=$(greenRelease)
 
@@ -35,7 +35,7 @@ productionSlot=$( (
     echo "##vso[task.setvariable variable=stagingSlot]$stagingSlot"
     echo "##vso[task.setvariable variable=green_enabled]$green_enabled"
 
-    helm upgrade --install  --reuse-values --set version.productionSlot=$productionSlot --set version.stagingSlot=$stagingSlot --set version.green_enabled=$green_enabled $(app_name)-catalog-api "$(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api/k8s/helm/catalog-api"
+    helm upgrade --install --reuse-values --set version.productionSlot=$productionSlot --set version.stagingSlot=$stagingSlot --set version.green_enabled=$green_enabled "$(app_name)-catalog-api" "$(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api/k8s/helm/catalog-api"
 # else
 #     echo "Green Deployment is not enabled"
 #     echo "Skipping tasks"
