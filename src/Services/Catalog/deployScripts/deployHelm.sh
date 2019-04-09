@@ -1,11 +1,12 @@
 echo "Checking Chart Status"
 helmStatus=$( (helm status eshoponcontainers-aks-catalog-api | grep "STATUS: " | awk -F': ' '{print $2}'))
 
-productionSlot="blue"
-stagingSlot="green"
 #Get the new release from the build
 newRelease=`cat $(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api/k8s/helm/Catalog-api/catalogVersion.txt`
 green_enabled=true
+productionSlot="blue"
+stagingSlot="green"
+
 if [ "$helmStatus" = "DEPLOYED" ]; then
 
     #Get current slot in production since we already have deployed the chart at least once
@@ -15,6 +16,13 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     stagingSlot=$( (
         helm get values --all eshoponcontainers-aks-catalog-api | grep 'stagingSlot: ' | awk -F': ' '{print $2}'
     ))
+    if [ "$productionSlot" = "" ]; then
+        productionSlot="blue"
+    fi
+    if [ "$stagingSlot" = ""]; then
+        stagingSlot="green"
+    fi
+
     echo "Setting up variables with current cluster status"
     blueRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'blue: ' | awk -F': ' '{print $2}'))
     greenRelease=$( (helm get values --all eshoponcontainers-aks-catalog-api | grep 'green: ' | awk -F': ' '{print $2}'))
@@ -24,7 +32,6 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     else
         blueRelease = $newRelease
     fi
-
 else
     #This is the first deployment, so we deploy twice the services and we set the current version to bleu
     #As an improvement, disable blue green for this specific case, we already have the correct Flag in the Helm chart
