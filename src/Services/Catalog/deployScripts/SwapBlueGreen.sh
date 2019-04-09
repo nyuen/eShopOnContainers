@@ -13,16 +13,19 @@ if [ $(green_enabled) = true ]; then
 
     #Swap the labels used by the service, effectively switching between the blue and the green deployment
     if [ "$(productionSlot)" = "blue" ]; then
-        productionSlot = "green"
-        stagingSlot = "blue"
+        productionSlot="green"
+        stagingSlot="blue"
     else
-        productionSlot = "blue"
-        stagingSlot = "green"
+        productionSlot="blue"
+        stagingSlot="green"
     fi
 
-    $green_enabled = true
+    $green_enabled=true
     blueRelease=$(blueRelease)
     greenRelease=$(greenRelease)
+
+    echo "blue release is $blueRelease"
+    echo "green release is $greenRelease"
 
     echo "Setting Azure Devops Pipeline variables"
     echo "##vso[task.setvariable variable=productionSlot]$productionSlot"
