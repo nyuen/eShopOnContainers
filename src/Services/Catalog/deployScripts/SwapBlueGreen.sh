@@ -24,18 +24,8 @@ productionSlot=$( (
     fi
 
     green_enabled=true
-    blueRelease=$(blueRelease)
-    greenRelease=$(greenRelease)
 
-    echo "blue release is $blueRelease"
-    echo "green release is $greenRelease"
-
-    echo "Setting Azure Devops Pipeline variables"
-    echo "##vso[task.setvariable variable=productionSlot]$productionSlot"
-    echo "##vso[task.setvariable variable=stagingSlot]$stagingSlot"
-    echo "##vso[task.setvariable variable=green_enabled]$green_enabled"
-
-    helm upgrade --install --reuse-values --set version.productionSlot=$productionSlot --set version.stagingSlot=$stagingSlot --set version.green_enabled=$green_enabled "$(app_name)-catalog-api" "$(System.DefaultWorkingDirectory)/_specialK-CI-CatalogAPI/helm/catalog-api/k8s/helm/catalog-api"
+    helm upgrade --install --values "$SYSTEM_DEFAULTWORKINGDIRECTORY/_specialK-CI-CatalogAPI/helm/shared-yaml/k8s/helm/app.yaml" --values "$SYSTEM_DEFAULTWORKINGDIRECTORY/_specialK-CI-CatalogAPI/helm/shared-yaml/k8s/helm/inf.yaml" --values "$SYSTEM_DEFAULTWORKINGDIRECTORY/_specialK-CI-CatalogAPI/helm/shared-yaml/k8s/helm/ingress_values.yaml" --set inf.k8s.dns="$EXTERNAL_DNS" --set inf.registry.server="$CONTAINER_REGISTRY" --set image.tag="$BUILD_BUILDNUMBER" --set image.pullPolicy="Always" --set inf.appinsights.key="$APP_INSIGHT" --set version.blue=$blueRelease --set version.green=$greenRelease  --set version.productionSlot=$productionSlot --set version.stagingSlot=$stagingSlot --set version.green_enabled=$green_enabled "$APP_NAME-catalog-api" "$SYSTEM_DEFAULTWORKINGDIRECTORY/_specialK-CI-CatalogAPI/helm/catalog-api/k8s/helm/catalog-api"
 # else
 #     echo "Green Deployment is not enabled"
 #     echo "Skipping tasks"
