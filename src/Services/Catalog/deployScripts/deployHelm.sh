@@ -42,6 +42,15 @@ else
     green_enabled=false
 fi
 
+#extra fail safe is the values are not corretly set
+if [ "blueRelease" = ""]; then
+    blueRelease=$newRelease
+fi
+
+if [ "greenRelease" = ""]; then
+    greenRelease=$newRelease
+fi
+
 echo "Setting Azure Devops Pipeline variables"
 export PRODUCTIONSLOT=$productionSlot
 export STAGINGSLOT=$stagingSlot
