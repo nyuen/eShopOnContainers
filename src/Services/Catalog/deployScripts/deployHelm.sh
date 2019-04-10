@@ -41,12 +41,18 @@ else
 fi
 
 echo "Setting Azure Devops Pipeline variables"
-echo "##vso[task.setvariable variable=productionSlot]$productionSlot"
-echo "##vso[task.setvariable variable=stagingSlot]$stagingSlot"
-echo "##vso[task.setvariable variable=blueRelease]$blueRelease"
-echo "##vso[task.setvariable variable=greenRelease]$greenRelease"
-echo "##vso[task.setvariable variable=newRelease]$newRelease"
-echo "##vso[task.setvariable variable=green_enabled]$green_enabled"
+export PRODUCTIONSLOT=$productionSlot
+export STAGINGSLOT=$stagingSlot
+export BLUERELEASE=$blueRelease
+export GREENRELEASE=$greenRelease
+export GREEN_ENABLED=$green_enabled
+export NEWRELEASE=$newRelease
+echo "##vso[task.setvariable variable=PRODUCTIONSLOT]$productionSlot"
+echo "##vso[task.setvariable variable=STAGINGSLOT]$stagingSlot"
+echo "##vso[task.setvariable variable=BLUERELEASE]$blueRelease"
+echo "##vso[task.setvariable variable=GREENRELEASE]$greenRelease"
+echo "##vso[task.setvariable variable=NEWRELEASE]$newRelease"
+echo "##vso[task.setvariable variable=GREEN_ENABLED]$green_enabled"
 
 
 RED='\033[0;31m'
