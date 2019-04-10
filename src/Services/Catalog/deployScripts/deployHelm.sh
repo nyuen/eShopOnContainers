@@ -43,11 +43,11 @@ else
 fi
 
 #extra fail safe is the values are not corretly set
-if [ "$blueRelease" = "" ]; then
+if [ -z "$blueRelease" ]; then
     blueRelease=$newRelease
 fi
 
-if [ "$greenRelease" = "" ]; then
+if [ -z "$greenRelease" ]; then
     greenRelease=$newRelease
 fi
 
