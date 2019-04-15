@@ -57,19 +57,19 @@ kubectl apply -f conf_local.yaml
 ## Creating Configuration (Powershell only)
 ```
 kubectl create configmap urls \
-    "--from-literal=PicBaseUrl=http://$($externalDns)/webshoppingapigw/api/v1/c/catalog/items/[0]/pic/" \
-    "--from-literal=Marketing_PicBaseUrl=http://$($externalDns)/webmarketingapigw/api/v1/m/campaigns/[0]/pic/" \
-    "--from-literal=mvc_e=http://$($externalDns)/webmvc" \
-    "--from-literal=marketingapigw_e=http://$($externalDns)/webmarketingapigw" \
-    "--from-literal=webshoppingapigw_e=http://$($externalDns)/webshoppingapigw" \
-    "--from-literal=mobileshoppingagg_e=http://$($externalDns)/mobileshoppingagg" \
-    "--from-literal=webshoppingagg_e=http://$($externalDns)/webshoppingagg" \
-    "--from-literal=identity_e=http://$($externalDns)/identity" \
-    "--from-literal=spa_e=http://$($externalDns)" \
-    "--from-literal=locations_e=http://$($externalDns)/locations-api" \
-    "--from-literal=marketing_e=http://$($externalDns)/marketing-api" \
-    "--from-literal=basket_e=http://$($externalDns)/basket-api" \
-    "--from-literal=ordering_e=http://$($externalDns)/ordering-api" \
+    "--from-literal=PicBaseUrl=http://$($externalDns)/webshoppingapigw/api/v1/c/catalog/items/[0]/pic/" `
+    "--from-literal=Marketing_PicBaseUrl=http://$($externalDns)/webmarketingapigw/api/v1/m/campaigns/[0]/pic/" `
+    "--from-literal=mvc_e=http://$($externalDns)/webmvc" `
+    "--from-literal=marketingapigw_e=http://$($externalDns)/webmarketingapigw" `
+    "--from-literal=webshoppingapigw_e=http://$($externalDns)/webshoppingapigw" `
+    "--from-literal=mobileshoppingagg_e=http://$($externalDns)/mobileshoppingagg" `
+    "--from-literal=webshoppingagg_e=http://$($externalDns)/webshoppingagg" `
+    "--from-literal=identity_e=http://$($externalDns)/identity" `
+    "--from-literal=spa_e=http://$($externalDns)" `
+    "--from-literal=locations_e=http://$($externalDns)/locations-api" `
+    "--from-literal=marketing_e=http://$($externalDns)/marketing-api" `
+    "--from-literal=basket_e=http://$($externalDns)/basket-api" `
+    "--from-literal=ordering_e=http://$($externalDns)/ordering-api" `
     "--from-literal=xamarin_callback_e=http://$($externalDns)/xamarincallback"
 
 kubectl label configmap urls app=eshop
