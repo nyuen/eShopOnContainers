@@ -16,14 +16,14 @@ resource "azurerm_container_registry" "Terra-ACR-SpecialK" {
 }
 
 
-#Data source for the Service Principal referenced in the AKS configuration
-data "azurerm_azuread_service_principal" "AKS-SPN" {
-  application_id = "${var.SPNClientID}"
-}
+# #Data source for the Service Principal referenced in the AKS configuration
+# data "azurerm_azuread_service_principal" "AKS-SPN" {
+#   application_id = "${var.SPNClientID}"
+# }
 
-#Role Assignment to give AKS the access to ACR through AAD
-resource "azurerm_role_assignment" "AKS-ACR-Role" {
-  scope                = "${azurerm_container_registry.Terra-ACR-SpecialK.id}"
-  role_definition_name = "Reader"
-  principal_id         = "${data.azurerm_azuread_service_principal.AKS-SPN.object_id}"
-}
+# #Role Assignment to give AKS the access to ACR through AAD
+# resource "azurerm_role_assignment" "AKS-ACR-Role" {
+#   scope                = "${azurerm_container_registry.Terra-ACR-SpecialK.id}"
+#   role_definition_name = "Reader"
+#   principal_id         = "${data.azurerm_azuread_service_principal.AKS-SPN.object_id}"
+# }
