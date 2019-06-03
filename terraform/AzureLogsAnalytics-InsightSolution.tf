@@ -1,6 +1,5 @@
 # ----------------------------------------------------
-# Tested & validated with Terraform 1.11.8 
-# 06 nov 2018
+# Testé le 3 juin 2019 avec Terraform 0.12 et AzureRM Provider 1.29 
 # ----------------------------------------------------
 # this Terraform File defines :
 # - an Azure Logs Analytics Solution : Containers Insight
@@ -9,13 +8,14 @@
 
 resource "azurerm_log_analytics_solution" "Terra-Containers-Insight" {
   solution_name         = "ContainerInsights"
-  location              = "${var.AzureRegion}"
-  resource_group_name   = "${var.ResourceGroup}"
-  workspace_resource_id = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
-  workspace_name        = "${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.name}"
+  location              = var.AzureRegion
+  resource_group_name   = var.ResourceGroup
+  workspace_resource_id = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id
+  workspace_name        = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.name
 
   plan {
-    publisher = "${var.OMSSolutionPublisher}"
+    publisher = var.OMSSolutionPublisher
     product   = "OMSGallery/ContainerInsights"
   }
 }
+

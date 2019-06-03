@@ -3,7 +3,7 @@
 # Variable nom de l'Azure Container Registry
 # Variable Azure Container Registry Name
 variable "ACR-Name" {
-  type    = "string"
+  type = string
   # default = ""
 }
 
@@ -11,13 +11,14 @@ variable "ACR-Name" {
 # Variable Azure Container Registry Name
 # Possible values : Classic, Basic, Standard, Premium
 variable "ACR-SKU" {
-  type    = "string"
+  type    = string
   default = "Premium"
 }
 
 # Variable admin / password for ACR access
 # Possible values : true, false
 variable "ACR-Admin-Enabled" {
-  type    = "string"
+  type    = string
   default = "true"
 }
+

@@ -1,6 +1,5 @@
 # ----------------------------------------------------
-# Tested & validated with Terraform 1.11.8 
-# 06 nov 2018
+# Testé le 3 juin 2019 avec Terraform 0.12 et AzureRM Provider 1.29 
 # ----------------------------------------------------
 # this Terraform File will deploy :
 # - an Azure Logs Analytics Workspace (cf. https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-overview)
@@ -10,30 +9,33 @@
 # ----------------------------------------------------
 
 resource "azurerm_log_analytics_workspace" "Terra-OMSWorkspace-SpecialK" {
-  name                = "${var.OMSworkspace}"
-  location            = "${azurerm_resource_group.Terra-RG-SpecialK.location}"
-  resource_group_name = "${azurerm_resource_group.Terra-RG-SpecialK.name}"
+  name                = var.OMSworkspace
+  location            = azurerm_resource_group.Terra-RG-SpecialK.location
+  resource_group_name = azurerm_resource_group.Terra-RG-SpecialK.name
+
   # Possible values : PerNode, Standard, Standalone
   # Standalone = Pricing per Gb, PerNode = OMS licence 
   # More info : https://azure.microsoft.com/en-us/pricing/details/log-analytics/
-  sku                 = "${var.OMSworkspaceSKU}"
+  sku = var.OMSworkspaceSKU
+
   # Possible values : 30 to 730
-  retention_in_days   = "${var.OMSworkspaceDaysOfRetention}"
+  retention_in_days = var.OMSworkspaceDaysOfRetention
 }
 
 # Output post deployment
-output "Azure Log Analytics Workspace ID" {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id}"
+output "AzureLogAnalyticsWorkspaceID" {
+  value = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.id
 }
 
-output "Azure Log Analytics Workspace Customer ID" {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.workspace_id}"
+output "AzureLogAnalyticsWorkspaceCustomerID" {
+  value = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.workspace_id
 }
 
-output "Azure Log Analytics Workspace primary Shared Key " {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.primary_shared_key}"
+output "AzureLogAnalyticsWorkspaceprimarySharedKey" {
+  value = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.primary_shared_key
 }
 
-output "Azure Log Analytics Workspace Secondary Shared Key " {
-    value="${azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.secondary_shared_key}"
+output "AzureLogAnalyticsWorkspaceSecondarySharedKey" {
+  value = azurerm_log_analytics_workspace.Terra-OMSWorkspace-SpecialK.secondary_shared_key
 }
+

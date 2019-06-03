@@ -4,7 +4,7 @@
 # Variable nom du cluster AKS
 # Variable AKS Name
 variable "AKS-Name" {
-  type    = "string"
+  type = string
   # default = ""
 }
 
@@ -12,7 +12,7 @@ variable "AKS-Name" {
 # Variable number of kubernetes nodes
 # Min : 3, Recommended : 3 or more
 variable "Nb-NodesKubernetes" {
-  type    = "string"
+  type    = string
   default = "3"
 }
 
@@ -20,21 +20,21 @@ variable "Nb-NodesKubernetes" {
 # Use the AZ CLI command line to check available versions
 # az aks get-versions --location westeurope
 variable "KubernetesVersion" {
-  type    = "string"
+  type    = string
   default = "1.11.6"
 }
 
 # Variable DNS Préfixe
 # Variable DNS Prefix
 variable "DNSPrefix" {
-  type    = "string"
+  type = string
   # default = ""
 }
 
 # Variable admin name
 # Variable nom d'admin
 variable "AdminName" {
-  type    = "string"
+  type    = string
   default = "specialk"
 }
 
@@ -51,7 +51,7 @@ variable "AdminName" {
 # AKS node VM Size
 # By Default : Standard_D1_v2
 variable "AKSNodeVMSize" {
-  type    = "string"
+  type    = string
   default = "Standard_D2s_v3"
 }
 
@@ -59,28 +59,23 @@ variable "AKSNodeVMSize" {
 # AKS node Operating System
 # By Default : Linux
 variable "AKSNodeOS" {
-  type    = "string"
+  type    = string
   default = "Linux"
 }
 
 # Variable Tag Environnement
 variable "Tag-environnement" {
-  type    = "string"
+  type    = string
   default = "Production"
 }
 
 # Variable Service Principal clientID
 variable "SPNClientID" {
-  type    = "string"
+  type = string
 }
 
 # Variable Service Principal clientSecret
 variable "SPNClientSecret" {
-  type    = "string"
+  type = string
 }
-
-
-
-
-
 

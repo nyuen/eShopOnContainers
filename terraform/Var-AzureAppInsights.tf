@@ -1,5 +1,5 @@
-
 variable "AppInsightsName" {
-  type    = "string"
+  type    = string
   default = "SpecialK-appinsights"
 }
+

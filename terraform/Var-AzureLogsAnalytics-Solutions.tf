@@ -4,18 +4,19 @@
 
 # Variable pour definir le nom de la solution OMS
 variable "OMSSolutionName" {
-  type    = "string"
+  type    = string
   default = "Containers"
 }
 
 # Variable pour definir l editeur de la solution OMS
 variable "OMSSolutionPublisher" {
-  type    = "string"
+  type    = string
   default = "Microsoft"
 }
 
 # Variable pour definir le nom du solution pack OMS
 variable "OMSProduct" {
-  type    = "string"
+  type    = string
   default = "OMSGallery/Containers"
 }
+
