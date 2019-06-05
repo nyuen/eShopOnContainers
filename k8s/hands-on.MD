@@ -189,7 +189,7 @@ helm upgrade --install \
 In the command below, note that we are _injecting_ values in helm, helm will then modify/generate the deployment files defined in the template to reflect these values. Behing the scenes helm uses Go Templates.
 
 ```
-helm upgrade --install
+helm upgrade --install \
 			  --values app.yaml \
 			  --values inf.yaml \
 			  --values ingress_values.yaml \
