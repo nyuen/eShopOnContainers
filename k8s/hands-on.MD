@@ -193,7 +193,6 @@ helm upgrade --install \
 			  --values app.yaml \
 			  --values inf.yaml \
 			  --values ingress_values.yaml \
-			  --set inf.registry.server="" \
 			  --set app.name="eshop" \
 			  --set inf.k8s.dns="$externalDNS" \
 			  --set inf.appinsights.key="" \
