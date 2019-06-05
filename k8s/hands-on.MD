@@ -197,7 +197,8 @@ helm upgrade --install \
 			  --set app.name="eshop" \
 			  --set inf.k8s.dns="$externalDNS" \
 			  --set inf.appinsights.key="<APP_Insight_ID>" \
-			  --set image.tag="latest" \
+			  --set image.tag="hub" \
 			  --set image.pullPolicy="Always" \
-			 --force  "eshop-aks-basket-api" basket-api
+			  --set image.repository="nyuen/basket.api" \
+			  --force  "eshop-aks-basket-api" basket-api
 ```
