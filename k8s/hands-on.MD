@@ -193,10 +193,10 @@ helm upgrade --install \
 			  --values app.yaml \
 			  --values inf.yaml \
 			  --values ingress_values.yaml \
-			  --set inf.registry.server="<ACR_URL>" \
+			  --set inf.registry.server="" \
 			  --set app.name="eshop" \
 			  --set inf.k8s.dns="$externalDNS" \
-			  --set inf.appinsights.key="<APP_Insight_ID>" \
+			  --set inf.appinsights.key="" \
 			  --set image.tag="hub" \
 			  --set image.pullPolicy="Always" \
 			  --set image.repository="nyuen/basket.api" \
