@@ -75,7 +75,7 @@ jobs:
     inputs:
       displayName: 'Whitesource Run'
       targetType: inline
-      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $WHITESOURCE_API -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project basket.api
+      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $(whitesource.api) -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project basket.api
 
   - task: Docker@1
     displayName: 'Push the basket api image to the ACR'
