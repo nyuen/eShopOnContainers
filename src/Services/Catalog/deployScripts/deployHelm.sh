@@ -8,6 +8,8 @@ newRelease=`cat $SYSTEM_DEFAULTWORKINGDIRECTORY/_specialK-CI-CatalogAPI/helm/cat
 green_enabled=true
 productionSlot="blue"
 stagingSlot="green"
+greenRelease=""
+blueRelease=""
 
 if [ "$helmStatus" = "DEPLOYED" ]; then
 
@@ -21,7 +23,7 @@ if [ "$helmStatus" = "DEPLOYED" ]; then
     if [ "$productionSlot" = "" ]; then
         productionSlot="blue"
     fi
-    if [ "$stagingSlot" = "" ]; then
+    if [ "$stagingSlot" =  ]; then
         stagingSlot="green"
     fi
 
@@ -43,11 +45,13 @@ else
 fi
 
 #extra fail safe is the values are not corretly set
-if [ -z "$blueRelease" ]; then
+if [ -z "$blueRelease"]; then
+    echo "Blue Release is not set"
     blueRelease=$newRelease
 fi
 
 if [ -z "$greenRelease" ]; then
+    echo "Green Release is not set"
     greenRelease=$newRelease
 fi
 
