@@ -189,15 +189,15 @@ helm upgrade --install \
 In the command below, note that we are _injecting_ values in helm, helm will then modify/generate the deployment files defined in the template to reflect these values. Behing the scenes helm uses Go Templates.
 
 ```
-helm upgrade --install
+helm upgrade --install \
 			  --values app.yaml \
 			  --values inf.yaml \
 			  --values ingress_values.yaml \
-			  --set inf.registry.server="<ACR_URL>" \
 			  --set app.name="eshop" \
 			  --set inf.k8s.dns="$externalDNS" \
-			  --set inf.appinsights.key="<APP_Insight_ID>" \
-			  --set image.tag="latest" \
+			  --set inf.appinsights.key="" \
+			  --set image.tag="hub" \
 			  --set image.pullPolicy="Always" \
-			 --force  "eshop-aks-basket-api" basket-api
+			  --set image.repository="nyuen/basket.api" \
+			  --force  "eshop-aks-basket-api" basket-api
 ```
