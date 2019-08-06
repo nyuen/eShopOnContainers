@@ -66,14 +66,16 @@ jobs:
       command: login
 
   - task: Bash@3
-    displayName: 'Whitesource Setup'
-    targetType: inline
-    script: curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar 
+    inouts:
+      displayName: 'Whitesource Setup'
+      targetType: inline
+      script: curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar 
 
   - task: Bash@3
-    displayName: 'Whitesource Run'
-    targetType: inline
-    script: java -jar wss-unified-agent.jar -noConfig true -apiKey $WHITESOURCE_API -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project basket.api
+    inputs:
+      displayName: 'Whitesource Run'
+      targetType: inline
+      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $WHITESOURCE_API -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project basket.api
 
   - task: Docker@1
     displayName: 'Push the basket api image to the ACR'
