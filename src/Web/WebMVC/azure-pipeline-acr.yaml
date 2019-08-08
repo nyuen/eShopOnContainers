@@ -58,8 +58,8 @@ jobs:
     inputs:
       displayName: 'Whitesource Run'
       targetType: inline
-      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $(whitesource.api) -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project webmvc
-      
+      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $(whitesource.api) -d src/Web/WebMVC/Dockerfile -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project webmvc
+
   - task: Docker@1
     displayName: 'Push the WebMVC image to the ACR'
     inputs:
