@@ -48,6 +48,18 @@ jobs:
       azureContainerRegistry: niyuen.azurecr.io
       command: login
 
+  - task: Bash@3
+    inputs:
+      displayName: 'Whitesource Setup'
+      targetType: inline
+      script: curl -LJO https://github.com/whitesource/unified-agent-distribution/releases/latest/download/wss-unified-agent.jar 
+
+  - task: Bash@3
+    inputs:
+      displayName: 'Whitesource Run'
+      targetType: inline
+      script: java -jar wss-unified-agent.jar -noConfig true -apiKey $(whitesource.api) -wss.url https://app.whitesourcesoftware.com/agent -product eShopOnContainers -project marketing.api
+
   - task: Docker@1
     displayName: 'Push the basket api image to the ACR'
     inputs:
