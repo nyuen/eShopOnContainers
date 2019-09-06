@@ -3,7 +3,7 @@ name: Build Catalag API docker Images
 on: 
   push:
     branches:
-      - master
+      - dev
       paths:
         - 'src/Services/Catalog.API/*'
 
