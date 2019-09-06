@@ -1,11 +1,12 @@
 name: Build Catalag API docker Images
 
+
 on: 
   push:
     branches:
-      - dev
-      paths:
-        - 'src/Services/Catalog.API/*'
+    - dev
+    paths:
+    - 'src/Services/Catalog.API/*'
 
 jobs:
 
