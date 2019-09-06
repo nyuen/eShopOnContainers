@@ -22,5 +22,5 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
     
     - run: |
-        docker build src/Services/Basket/Basket.API/Dockerfile -t niyuen.azurecr.io/eshop/catalog.api:${{ github.sha }}
+        docker build . -f src/Services/Catalog/Catalog.API/Dockerfile -t niyuen.azurecr.io/eshop/catalog.api:${{ github.sha }}
         docker push contoso.azurecr.io/eshop/catalog.api:${{ github.sha }}
