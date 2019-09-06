@@ -23,4 +23,4 @@ jobs:
     
     - run: |
         docker build . -f src/Services/Catalog/Catalog.API/Dockerfile -t niyuen.azurecr.io/eshop/catalog.api:${{ github.sha }}
-        docker push contoso.azurecr.io/eshop/catalog.api:${{ github.sha }}
+        docker push niyuen.azurecr.io/eshop/catalog.api:${{ github.sha }}
