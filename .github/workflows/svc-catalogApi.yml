@@ -1,0 +1,27 @@
+name: Build Catalag API docker Images
+
+on: 
+  push:
+    branches:
+      - master
+      paths:
+        - 'src/Services/Catalog.API/*'
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    
+    - uses: azure/container-actions/docker-login@master
+      with:
+        login-server: niyuen.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - run: |
+        docker build src/Services/Basket/Basket.API/Dockerfile -t niyuen.azurecr.io/eshop/catalog.api:${{ github.sha }}
+        docker push contoso.azurecr.io/eshop/catalog.api:${{ github.sha }}
