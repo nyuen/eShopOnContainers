@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "webstatus.fullname" . -}}
 {{- $ingressPath := include "pathBase" . -}}
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Ingress
 metadata:
   name: {{ template "webstatus.fullname" . }}

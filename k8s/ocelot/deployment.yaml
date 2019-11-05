@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigwmm
@@ -37,7 +37,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigwms
@@ -76,7 +76,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigwwm
@@ -115,7 +115,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: apigwws

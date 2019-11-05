@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: basket
@@ -55,7 +55,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalog
@@ -107,7 +107,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: identity
@@ -197,7 +197,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ordering
@@ -264,7 +264,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ordering-backgroundtasks
@@ -323,7 +323,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ordering-signalrhub
@@ -374,7 +374,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: locations
@@ -441,7 +441,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: marketing
@@ -518,7 +518,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payment
@@ -560,7 +560,7 @@ spec:
       imagePullSecrets:
       - name: registry-key      
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webmvc
@@ -664,7 +664,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webstatus
@@ -745,7 +745,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webspa
@@ -839,7 +839,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webshoppingagg
@@ -883,7 +883,7 @@ spec:
       imagePullSecrets:
       - name: registry-key
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mobileshoppingagg
