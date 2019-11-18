@@ -86,55 +86,15 @@ Note that the deployments are paused, this is done so that you may update the im
 kubectl apply -f deployments.yaml
 ```
 
-
-## Updating deployments with the correct image (with tag and/or registry)
 ```
-kubectl set image deployments/basket "basket=nyuen/basket.api:hub"
-kubectl set image deployments/catalog "catalog=nyuen/catalog.api:hub"
-kubectl set image deployments/identity "identity=nyuen/identity.api:hub"
-kubectl set image deployments/ordering "ordering=nyuen/ordering.api:hub"
-kubectl set image deployments/ordering-backgroundtasks "ordering-backgroundtasks=nyuen/ordering.backgroundtasks:hub"
-kubectl set image deployments/marketing "marketing=nyuen/marketing.api:hub"
-kubectl set image deployments/locations "locations=nyuen/locations.api:hub"
-kubectl set image deployments/payment "payment=nyuen/payment.api:hub"
-kubectl set image deployments/webmvc "webmvc=nyuen/webmvc:hub"
-kubectl set image deployments/webstatus "webstatus=nyuen/webstatus:hub"
-kubectl set image deployments/webspa "webspa=nyuen/webspa:hub"
-kubectl set image deployments/apigwws "apigwws=nyuen/ocelotapigw:hub"
-kubectl set image deployments/apigwwm "apigwwm=nyuen/ocelotapigw:hub"
-kubectl set image deployments/apigwms "apigwms=nyuen/ocelotapigw:hub"
-kubectl set image deployments/apigwmm "apigwmm=nyuen/ocelotapigw:hub"
-kubectl set image deployments/ordering-signalrhub "ordering-signalrhub=nyuen/ordering.signalrhub:hub"
-
-kubectl set image deployments/mobileshoppingagg "mobileshoppingagg=nyuen/mobileshoppingagg:hub"
-kubectl set image deployments/webshoppingagg "webshoppingagg=nyuen/webshoppingagg:hub"
-```
-
-# Ready to roll!
-```
-kubectl rollout resume deployments/basket
-kubectl rollout resume deployments/catalog
-kubectl rollout resume deployments/identity
-kubectl rollout resume deployments/ordering
-kubectl rollout resume deployments/marketing
-kubectl rollout resume deployments/locations
-kubectl rollout resume deployments/payment
-kubectl rollout resume deployments/webmvc
-kubectl rollout resume deployments/webstatus
-kubectl rollout resume deployments/webspa
-kubectl rollout resume deployments/mobileshoppingagg
-kubectl rollout resume deployments/webshoppingagg
-kubectl rollout resume deployments/apigwmm
-kubectl rollout resume deployments/apigwms
-kubectl rollout resume deployments/apigwwm
-kubectl rollout resume deployments/apigwws
-kubectl rollout resume deployments/ordering-signalrhub
-kubectl rollout resume deployments/ordering-backgroundtasks
-
 kubectl apply -f helm/aks-httpaddon-cfg.yaml
 ```
 
-# HELM hands-on
+
+
+
+
+# OPTIONAL - HELM hands-on
 In this section we will deploy the _basket-api_ using **Helm Charts** instead of _manuel_ K8s deployment files
 
 ### make sure that the helm cli is installed
