@@ -17,6 +17,10 @@ kind: Deployment
 metadata:
   name: nosql-data
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: nosql-data
   template:
     metadata:
       labels:

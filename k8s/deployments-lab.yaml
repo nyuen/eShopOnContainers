@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: basket
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: basket
   paused: false
   template:
     metadata:
@@ -60,6 +64,10 @@ kind: Deployment
 metadata:
   name: catalog
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: catalog
   paused: false
   template:
     metadata:
@@ -112,6 +120,10 @@ kind: Deployment
 metadata:
   name: identity
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: identity
   paused: false
   template:
     metadata:
@@ -202,6 +214,10 @@ kind: Deployment
 metadata:
   name: ordering
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: ordering
   paused: false
   template:
     metadata:
@@ -269,6 +285,10 @@ kind: Deployment
 metadata:
   name: ordering-backgroundtasks
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: ordering-backgroundtasks
   paused: false
   template:
     metadata:
@@ -328,6 +348,10 @@ kind: Deployment
 metadata:
   name: ordering-signalrhub
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: ordering-signalrhub
   paused: false
   template:
     metadata:
@@ -379,6 +403,10 @@ kind: Deployment
 metadata:
   name: locations
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: locations
   paused: false
   template:
     metadata:
@@ -446,6 +474,10 @@ kind: Deployment
 metadata:
   name: marketing
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: marketing
   paused: false
   template:
     metadata:
@@ -523,6 +555,10 @@ kind: Deployment
 metadata:
   name: payment
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: payment
   paused: false
   template:
     metadata:
@@ -565,6 +601,10 @@ kind: Deployment
 metadata:
   name: webmvc
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: webmvc
   paused: false
   template:
     metadata:
@@ -669,6 +709,10 @@ kind: Deployment
 metadata:
   name: webstatus
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: webstatus
   paused: false
   template:
     metadata:
@@ -750,6 +794,10 @@ kind: Deployment
 metadata:
   name: webspa
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: webspa
   paused: false
   template:
     metadata:
@@ -844,6 +892,10 @@ kind: Deployment
 metadata:
   name: webshoppingagg
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: webshoppingagg
   paused: false
   template:
     metadata:
@@ -888,6 +940,10 @@ kind: Deployment
 metadata:
   name: mobileshoppingagg
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: mobileshoppingagg
   paused: false
   template:
     metadata:

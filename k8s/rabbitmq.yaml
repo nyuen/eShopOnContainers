@@ -17,6 +17,10 @@ kind: Deployment
 metadata:
   name: rabbitmq
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: rabbitmq
   template:
     metadata:
       labels:

@@ -17,6 +17,10 @@ kind: Deployment
 metadata:
   name: sql-data
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: sql-data
   template:
     metadata:
       labels:

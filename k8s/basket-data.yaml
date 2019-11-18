@@ -17,6 +17,10 @@ kind: Deployment
 metadata:
   name: basket-data
 spec:
+  selector:
+    matchLabels:
+      app: eshop
+      component: basket-data
   template:
     metadata:
       labels:
