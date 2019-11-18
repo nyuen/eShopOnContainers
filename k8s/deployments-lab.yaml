@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: basket
-        image: nyuen/basket.api
+        image: nyuen/basket.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -77,7 +77,7 @@ spec:
     spec:
       containers:
       - name: catalog
-        image: nyuen/catalog.api
+        image: nyuen/catalog.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -134,7 +134,7 @@ spec:
      
       containers:
       - name: identity
-        image: nyuen/identity.api
+        image: nyuen/identity.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -227,7 +227,7 @@ spec:
     spec:
       containers:
       - name: ordering
-        image: nyuen/ordering.api
+        image: nyuen/ordering.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -298,7 +298,7 @@ spec:
     spec:
       containers:
       - name: ordering-backgroundtasks
-        image: nyuen/ordering.backgroundtasks
+        image: nyuen/ordering.backgroundtasks:hub
         imagePullPolicy: Always
         env:        
         - name: ConnectionString
@@ -361,7 +361,7 @@ spec:
     spec:
       containers:
       - name: ordering-signalrhub
-        image: nyuen/ordering.signalrhub
+        image: nyuen/ordering.signalrhub:hub
         imagePullPolicy: Always
         env:                
         - name: EventBusConnection
@@ -416,7 +416,7 @@ spec:
     spec:
       containers:
       - name: locations
-        image: nyuen/locations.api
+        image: nyuen/locations.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -487,7 +487,7 @@ spec:
     spec:
       containers:
       - name: marketing
-        image: nyuen/marketing.api
+        image: nyuen/marketing.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -568,7 +568,7 @@ spec:
     spec:
       containers:
       - name: payment
-        image: nyuen/payment.api
+        image: nyuen/payment.api:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -614,7 +614,7 @@ spec:
     spec:
       containers:
       - name: webmvc
-        image: nyuen/webmvc
+        image: nyuen/webmvc:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -722,7 +722,7 @@ spec:
     spec:
       containers:
       - name: webstatus
-        image: nyuen/webstatus
+        image: nyuen/webstatus:hub
         imagePullPolicy: Always
         env:
         - name: PATH_BASE
@@ -807,7 +807,7 @@ spec:
     spec:
       containers:
       - name: webspa
-        image: nyuen/webspa
+        image: nyuen/webspa:hub
         imagePullPolicy: Always
         env:
         - name: ASPNETCORE_URLS
@@ -905,7 +905,7 @@ spec:
     spec:
       containers:
       - name: webshoppingagg
-        image: nyuen/webshoppingagg
+        image: nyuen/webshoppingagg:hub
         imagePullPolicy: Always
         env:
         - name: ASPNETCORE_URLS
@@ -953,7 +953,7 @@ spec:
     spec:
       containers:
       - name: mobileshoppingagg
-        image: nyuen/mobileshoppingagg
+        image: nyuen/mobileshoppingagg:hub
         imagePullPolicy: Always
         env:
         - name: ASPNETCORE_URLS
