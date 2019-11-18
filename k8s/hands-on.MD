@@ -83,7 +83,7 @@ We are now ready to deploy our containers through the concept of K8s deployments
 Note that the deployments are paused, this is done so that you may update the images through the next piece of code. We you may your own images if you've successfully built your docker images and pushed them to Azure Container Registry
 
 ```
-kubectl apply -f deployments.yaml
+kubectl apply -f deployments-lab.yaml
 ```
 
 ```
