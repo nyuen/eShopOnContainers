@@ -3,7 +3,11 @@ kind: Deployment
 metadata:
   name: apigwmm
 spec:
-  paused: true
+  paused: false
+  selector:
+    matchLabels:
+      app: eshop
+      component: apigwmm
   template:
     metadata:
       labels:
@@ -42,7 +46,11 @@ kind: Deployment
 metadata:
   name: apigwms
 spec:
-  paused: true
+  paused: false
+  selector:
+    matchLabels:
+      app: eshop
+      component: apigwms
   template:
     metadata:
       labels:
@@ -81,7 +89,11 @@ kind: Deployment
 metadata:
   name: apigwwm
 spec:
-  paused: true
+  paused: false
+  selector:
+    matchLabels:
+      app: eshop
+      component: apigwwm
   template:
     metadata:
       labels:
@@ -121,6 +133,10 @@ metadata:
   name: apigwws
 spec:
   paused: true
+  selector:
+    matchLabels:
+      app: eshop
+      component: apigwws
   template:
     metadata:
       labels:
