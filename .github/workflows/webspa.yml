@@ -75,7 +75,7 @@ jobs:
       shell: bash
       env:
         TAG: ${{ env.BRANCH }}
-        REGISTRY: ${{ secrets.REGISTRY_ENDPOINT }}
+        REGISTRY: ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_ENDPOINT }}
 
     - name: Compose push ${{ env.SERVICE }}
       run: sudo -E docker-compose push ${{ env.SERVICE }}
@@ -83,7 +83,7 @@ jobs:
       shell: bash
       env:
         TAG: ${{ env.BRANCH }}
-        REGISTRY: ${{ secrets.REGISTRY_ENDPOINT }}
+        REGISTRY: ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_ENDPOINT }}
 
     - name: Create multiarch manifest
       run: |
