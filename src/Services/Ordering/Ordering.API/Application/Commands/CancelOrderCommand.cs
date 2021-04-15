@@ -1,9 +1,5 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace Ordering.API.Application.Commands
 {
@@ -11,8 +7,11 @@ namespace Ordering.API.Application.Commands
     {
 
         [DataMember]
-        public int OrderNumber { get; private set; }
+        public int OrderNumber { get; set; }
+        public CancelOrderCommand()
+        {
 
+        }
         public CancelOrderCommand(int orderNumber)
         {
             OrderNumber = orderNumber;

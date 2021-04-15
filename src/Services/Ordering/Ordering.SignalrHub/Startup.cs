@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBus;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Abstractions;
@@ -9,15 +11,16 @@ using Microsoft.eShopOnContainers.BuildingBlocks.EventBusRabbitMQ;
 using Microsoft.eShopOnContainers.BuildingBlocks.EventBusServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Ordering.SignalrHub.AutofacModules;
 using Ordering.SignalrHub.IntegrationEvents;
 using Ordering.SignalrHub.IntegrationEvents.EventHandling;
 using Ordering.SignalrHub.IntegrationEvents.Events;
 using RabbitMQ.Client;
-using StackExchange.Redis;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 namespace Ordering.SignalrHub
 {
@@ -28,24 +31,29 @@ namespace Ordering.SignalrHub
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
+            services
+                .AddCustomHealthCheck(Configuration)
+                .AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowCredentials());
+                });
 
             if (Configuration.GetValue<string>("IsClusterEnv") == bool.TrueString)
             {
                 services
                     .AddSignalR()
-                    .AddRedis(Configuration["SignalrStoreConnectionString"]);
+                    .AddStackExchangeRedis(Configuration["SignalrStoreConnectionString"]);
             }
             else
             {
@@ -56,12 +64,12 @@ namespace Ordering.SignalrHub
             {
                 services.AddSingleton<IServiceBusPersisterConnection>(sp =>
                 {
-                    var logger = sp.GetRequiredService<ILogger<DefaultServiceBusPersisterConnection>>();
-
                     var serviceBusConnectionString = Configuration["EventBusConnection"];
                     var serviceBusConnection = new ServiceBusConnectionStringBuilder(serviceBusConnectionString);
 
-                    return new DefaultServiceBusPersisterConnection(serviceBusConnection, logger);
+                    var subscriptionClientName = Configuration["SubscriptionClientName"];
+
+                    return new DefaultServiceBusPersisterConnection(serviceBusConnection, subscriptionClientName);
                 });
             }
             else
@@ -73,7 +81,8 @@ namespace Ordering.SignalrHub
 
                     var factory = new ConnectionFactory()
                     {
-                        HostName = Configuration["EventBusConnection"]
+                        HostName = Configuration["EventBusConnection"],
+                        DispatchConsumersAsync = true
                     };
 
                     if (!string.IsNullOrEmpty(Configuration["EventBusUserName"]))
@@ -110,31 +119,39 @@ namespace Ordering.SignalrHub
             return new AutofacServiceProvider(container.Build());
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            loggerFactory.AddAzureWebAppDiagnostics();
-            loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Trace);
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
+            //loggerFactory.AddAzureWebAppDiagnostics();
+            //loggerFactory.AddApplicationInsights(app.ApplicationServices, LogLevel.Trace);
 
             var pathBase = Configuration["PATH_BASE"];
+
             if (!string.IsNullOrEmpty(pathBase))
             {
-                loggerFactory.CreateLogger("init").LogDebug($"Using PATH BASE '{pathBase}'");
+                loggerFactory.CreateLogger<Startup>().LogDebug("Using PATH BASE '{pathBase}'", pathBase);
                 app.UsePathBase(pathBase);
             }
 
+            app.UseRouting();
             app.UseCors("CorsPolicy");
-
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseSignalR(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<NotificationsHub>("/notificationhub", options =>
-                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransports.All);
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
+                endpoints.MapHub<NotificationsHub>("/hub/notificationhub");
             });
 
             ConfigureEventBus(app);
@@ -143,13 +160,13 @@ namespace Ordering.SignalrHub
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            
+
             eventBus.Subscribe<OrderStatusChangedToAwaitingValidationIntegrationEvent, OrderStatusChangedToAwaitingValidationIntegrationEventHandler>();
             eventBus.Subscribe<OrderStatusChangedToPaidIntegrationEvent, OrderStatusChangedToPaidIntegrationEventHandler>();
             eventBus.Subscribe<OrderStatusChangedToStockConfirmedIntegrationEvent, OrderStatusChangedToStockConfirmedIntegrationEventHandler>();
             eventBus.Subscribe<OrderStatusChangedToShippedIntegrationEvent, OrderStatusChangedToShippedIntegrationEventHandler>();
             eventBus.Subscribe<OrderStatusChangedToCancelledIntegrationEvent, OrderStatusChangedToCancelledIntegrationEventHandler>();
-            eventBus.Subscribe<OrderStatusChangedToSubmittedIntegrationEvent, OrderStatusChangedToSubmittedIntegrationEventHandler>();  
+            eventBus.Subscribe<OrderStatusChangedToSubmittedIntegrationEvent, OrderStatusChangedToSubmittedIntegrationEventHandler>();
         }
 
         private void ConfigureAuthService(IServiceCollection services)
@@ -169,13 +186,25 @@ namespace Ordering.SignalrHub
                 options.Authority = identityUrl;
                 options.RequireHttpsMetadata = false;
                 options.Audience = "orders.signalrhub";
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/hub/notificationhub")))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
         }
 
         private void RegisterEventBus(IServiceCollection services)
         {
-            var subscriptionClientName = Configuration["SubscriptionClientName"];
-
             if (Configuration.GetValue<bool>("AzureServiceBusEnabled"))
             {
                 services.AddSingleton<IEventBus, EventBusServiceBus>(sp =>
@@ -186,13 +215,14 @@ namespace Ordering.SignalrHub
                     var eventBusSubcriptionsManager = sp.GetRequiredService<IEventBusSubscriptionsManager>();
 
                     return new EventBusServiceBus(serviceBusPersisterConnection, logger,
-                        eventBusSubcriptionsManager, subscriptionClientName, iLifetimeScope);
+                        eventBusSubcriptionsManager, iLifetimeScope);
                 });
             }
             else
             {
                 services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
                 {
+                    var subscriptionClientName = Configuration["SubscriptionClientName"];
                     var rabbitMQPersistentConnection = sp.GetRequiredService<IRabbitMQPersistentConnection>();
                     var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
@@ -209,6 +239,36 @@ namespace Ordering.SignalrHub
             }
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+        }
+    }
+
+    public static class CustomExtensionMethods
+    {
+        public static IServiceCollection AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
+        {
+            var hcBuilder = services.AddHealthChecks();
+
+            hcBuilder.AddCheck("self", () => HealthCheckResult.Healthy());
+
+            if (configuration.GetValue<bool>("AzureServiceBusEnabled"))
+            {
+                hcBuilder
+                    .AddAzureServiceBusTopic(
+                        configuration["EventBusConnection"],
+                        topicName: "eshop_event_bus",
+                        name: "signalr-servicebus-check",
+                        tags: new string[] { "servicebus" });
+            }
+            else
+            {
+                hcBuilder
+                    .AddRabbitMQ(
+                        $"amqp://{configuration["EventBusConnection"]}",
+                        name: "signalr-rabbitmqbus-check",
+                        tags: new string[] { "rabbitmqbus" });
+            }
+
+            return services;
         }
     }
 }

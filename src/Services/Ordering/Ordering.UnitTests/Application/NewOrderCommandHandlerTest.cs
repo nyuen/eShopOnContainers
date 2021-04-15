@@ -10,24 +10,26 @@ using System.Threading.Tasks;
 
 namespace UnitTest.Ordering.Application
 {
+    using global::Ordering.API.Application.IntegrationEvents;
     using global::Ordering.API.Application.Models;
     using MediatR;
-    using System.Collections;
+    using Microsoft.Extensions.Logging;
     using System.Collections.Generic;
     using Xunit;
-    using static Microsoft.eShopOnContainers.Services.Ordering.API.Application.Commands.CreateOrderCommand;
 
     public class NewOrderRequestHandlerTest
     {
         private readonly Mock<IOrderRepository> _orderRepositoryMock;
         private readonly Mock<IIdentityService> _identityServiceMock;
         private readonly Mock<IMediator> _mediator;
+        private readonly Mock<IOrderingIntegrationEventService> _orderingIntegrationEventService;
 
         public NewOrderRequestHandlerTest()
         {
 
             _orderRepositoryMock = new Mock<IOrderRepository>();
             _identityServiceMock = new Mock<IIdentityService>();
+            _orderingIntegrationEventService = new Mock<IOrderingIntegrationEventService>();
             _mediator = new Mock<IMediator>();
         }
 
@@ -47,8 +49,9 @@ namespace UnitTest.Ordering.Application
 
             _identityServiceMock.Setup(svc => svc.GetUserIdentity()).Returns(buyerId);
 
+            var LoggerMock = new Mock<ILogger<CreateOrderCommandHandler>>();
             //Act
-            var handler = new CreateOrderCommandHandler(_mediator.Object, _orderRepositoryMock.Object, _identityServiceMock.Object);
+            var handler = new CreateOrderCommandHandler(_mediator.Object, _orderingIntegrationEventService.Object, _orderRepositoryMock.Object, _identityServiceMock.Object, LoggerMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 
@@ -88,7 +91,7 @@ namespace UnitTest.Ordering.Application
                 cardExpiration: args != null && args.ContainsKey("cardExpiration") ? (DateTime)args["cardExpiration"] : DateTime.MinValue,
                 cardSecurityNumber: args != null && args.ContainsKey("cardSecurityNumber") ? (string)args["cardSecurityNumber"] : "123",
                 cardHolderName: args != null && args.ContainsKey("cardHolderName") ? (string)args["cardHolderName"] : "XXX",
-                cardTypeId: args != null && args.ContainsKey("cardTypeId") ? (int)args["cardTypeId"] : 0);               
+                cardTypeId: args != null && args.ContainsKey("cardTypeId") ? (int)args["cardTypeId"] : 0);
         }
     }
 }

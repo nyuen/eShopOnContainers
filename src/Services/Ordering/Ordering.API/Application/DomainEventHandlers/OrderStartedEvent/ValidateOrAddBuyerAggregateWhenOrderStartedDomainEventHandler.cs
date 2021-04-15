@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.eShopOnContainers.Services.Ordering.API.Infrastructure.Services;
 using Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.BuyerAggregate;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.API.Application.DomainEventHandlers.OrderStartedEvent
 {
-    public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler 
+    public class ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler
                         : INotificationHandler<OrderStartedDomainEvent>
     {
         private readonly ILoggerFactory _logger;
@@ -21,8 +20,8 @@ namespace Ordering.API.Application.DomainEventHandlers.OrderStartedEvent
         private readonly IOrderingIntegrationEventService _orderingIntegrationEventService;
 
         public ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler(
-            ILoggerFactory logger, 
-            IBuyerRepository buyerRepository, 
+            ILoggerFactory logger,
+            IBuyerRepository buyerRepository,
             IIdentityService identityService,
             IOrderingIntegrationEventService orderingIntegrationEventService)
         {
@@ -33,13 +32,13 @@ namespace Ordering.API.Application.DomainEventHandlers.OrderStartedEvent
         }
 
         public async Task Handle(OrderStartedDomainEvent orderStartedEvent, CancellationToken cancellationToken)
-        {            
+        {
             var cardTypeId = (orderStartedEvent.CardTypeId != 0) ? orderStartedEvent.CardTypeId : 1;
             var buyer = await _buyerRepository.FindAsync(orderStartedEvent.UserId);
             bool buyerOriginallyExisted = (buyer == null) ? false : true;
 
             if (!buyerOriginallyExisted)
-            {                
+            {
                 buyer = new Buyer(orderStartedEvent.UserId, orderStartedEvent.UserName);
             }
 
@@ -51,17 +50,18 @@ namespace Ordering.API.Application.DomainEventHandlers.OrderStartedEvent
                                            orderStartedEvent.CardExpiration,
                                            orderStartedEvent.Order.Id);
 
-            var buyerUpdated = buyerOriginallyExisted ? 
-                _buyerRepository.Update(buyer) : 
+            var buyerUpdated = buyerOriginallyExisted ?
+                _buyerRepository.Update(buyer) :
                 _buyerRepository.Add(buyer);
 
             await _buyerRepository.UnitOfWork
-                .SaveEntitiesAsync();
+                .SaveEntitiesAsync(cancellationToken);
 
             var orderStatusChangedTosubmittedIntegrationEvent = new OrderStatusChangedToSubmittedIntegrationEvent(orderStartedEvent.Order.Id, orderStartedEvent.Order.OrderStatus.Name, buyer.Name);
-            await _orderingIntegrationEventService.PublishThroughEventBusAsync(orderStatusChangedTosubmittedIntegrationEvent);
-
-            _logger.CreateLogger(nameof(ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler)).LogTrace($"Buyer {buyerUpdated.Id} and related payment method were validated or updated for orderId: {orderStartedEvent.Order.Id}.");
+            await _orderingIntegrationEventService.AddAndSaveEventAsync(orderStatusChangedTosubmittedIntegrationEvent);
+            _logger.CreateLogger<ValidateOrAddBuyerAggregateWhenOrderStartedDomainEventHandler>()
+                .LogTrace("Buyer {BuyerId} and related payment method were validated or updated for orderId: {OrderId}.",
+                    buyerUpdated.Id, orderStartedEvent.Order.Id);
         }
     }
 }

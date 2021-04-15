@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events
 {
-    public class IntegrationEvent
+    public record IntegrationEvent
     {
         public IntegrationEvent()
         {
@@ -10,7 +11,17 @@ namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events
             CreationDate = DateTime.UtcNow;
         }
 
-        public Guid Id  { get; }
-        public DateTime CreationDate { get; }
+        [JsonConstructor]
+        public IntegrationEvent(Guid id, DateTime createDate)
+        {
+            Id = id;
+            CreationDate = createDate;
+        }
+
+        [JsonProperty]
+        public Guid Id { get; private init; }
+
+        [JsonProperty]
+        public DateTime CreationDate { get; private init; }
     }
 }

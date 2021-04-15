@@ -3,8 +3,6 @@ using Microsoft.eShopOnContainers.BuildingBlocks.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus
 {
@@ -37,8 +35,13 @@ namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus
             where TH : IIntegrationEventHandler<T>
         {
             var eventName = GetEventKey<T>();
+
             DoAddSubscription(typeof(TH), eventName, isDynamic: false);
-            _eventTypes.Add(typeof(T));
+
+            if (!_eventTypes.Contains(typeof(T)))
+            {
+                _eventTypes.Add(typeof(T));
+            }
         }
 
         private void DoAddSubscription(Type handlerType, string eventName, bool isDynamic)
@@ -112,10 +115,7 @@ namespace Microsoft.eShopOnContainers.BuildingBlocks.EventBus
         private void RaiseOnEventRemoved(string eventName)
         {
             var handler = OnEventRemoved;
-            if (handler != null)
-            {
-                OnEventRemoved(this, eventName);
-            }
+            handler?.Invoke(this, eventName);
         }
 
 
