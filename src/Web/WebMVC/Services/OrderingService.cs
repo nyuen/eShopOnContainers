@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WebMVC.Infrastructure;
-using WebMVC.Models;
+using WebMVC.Services.ModelDTOs;
 
 namespace Microsoft.eShopOnContainers.WebMVC.Services
 {
@@ -22,7 +22,7 @@ namespace Microsoft.eShopOnContainers.WebMVC.Services
             _httpClient = httpClient;
             _settings = settings;
 
-            _remoteServiceBaseUrl = $"{settings.Value.PurchaseUrl}/api/v1/o/orders";
+            _remoteServiceBaseUrl = $"{settings.Value.PurchaseUrl}/o/api/v1/orders";
         }
 
         async public Task<Order> GetOrder(ApplicationUser user, string id)

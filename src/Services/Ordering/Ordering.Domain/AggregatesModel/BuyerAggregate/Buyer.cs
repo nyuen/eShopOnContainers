@@ -13,11 +13,12 @@ namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.B
 
         public string Name { get; private set; }
 
-        private List<PaymentMethod> _paymentMethods;        
+        private List<PaymentMethod> _paymentMethods;
 
         public IEnumerable<PaymentMethod> PaymentMethods => _paymentMethods.AsReadOnly();
 
-        protected Buyer() {
+        protected Buyer()
+        {
 
             _paymentMethods = new List<PaymentMethod>();
         }
@@ -29,11 +30,11 @@ namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.B
         }
 
         public PaymentMethod VerifyOrAddPaymentMethod(
-            int cardTypeId, string alias, string cardNumber, 
+            int cardTypeId, string alias, string cardNumber,
             string securityNumber, string cardHolderName, DateTime expiration, int orderId)
         {
-            var existingPayment = _paymentMethods.Where(p => p.IsEqualTo(cardTypeId, cardNumber, expiration))
-                .SingleOrDefault();
+            var existingPayment = _paymentMethods
+                .SingleOrDefault(p => p.IsEqualTo(cardTypeId, cardNumber, expiration));
 
             if (existingPayment != null)
             {
@@ -41,16 +42,14 @@ namespace Microsoft.eShopOnContainers.Services.Ordering.Domain.AggregatesModel.B
 
                 return existingPayment;
             }
-            else
-            {
-                var payment = new PaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration);
 
-                _paymentMethods.Add(payment);
+            var payment = new PaymentMethod(cardTypeId, alias, cardNumber, securityNumber, cardHolderName, expiration);
 
-                AddDomainEvent(new BuyerAndPaymentMethodVerifiedDomainEvent(this, payment, orderId));
+            _paymentMethods.Add(payment);
 
-                return payment;
-            }
-        }       
+            AddDomainEvent(new BuyerAndPaymentMethodVerifiedDomainEvent(this, payment, orderId));
+
+            return payment;
+        }
     }
 }
